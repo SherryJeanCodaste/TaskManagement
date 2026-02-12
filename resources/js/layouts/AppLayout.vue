@@ -9,10 +9,18 @@ type Props = {
 withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
+
+defineSlots<{
+    'header-actions'?: () => any;
+    default?: () => any;
+}>();
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
+        <template #header-actions>
+            <slot name="header-actions" />
+        </template>
         <slot />
     </AppLayout>
 </template>

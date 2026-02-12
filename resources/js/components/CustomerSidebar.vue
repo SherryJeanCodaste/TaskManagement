@@ -2,12 +2,8 @@
 import { Link } from '@inertiajs/vue3';
 import { 
     LayoutGrid, 
-    FolderKanban, 
-    Users, 
-    ClipboardList,
-    LogOut 
+    ClipboardList
 } from 'lucide-vue-next';
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -19,34 +15,21 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: '/customer/dashboard',
         icon: LayoutGrid,
     },
     {
-        title: 'Projects',
-        href: '/admin/projects',
-        icon: FolderKanban,
-    },
-    {
-        title: 'Users',
-        href: '/users',
-        icon: Users,
-    },
-    {
-        title: 'Tasks',
-        href: '/tasks',
+        title: 'Assigned Tasks',
+        href: '/customer/tasks',
         icon: ClipboardList,
     },
 ];
-
-const footerNavItems: NavItem[] = [];
 </script>
 
 <template>
@@ -55,7 +38,7 @@ const footerNavItems: NavItem[] = [];
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child class="hover:bg-white/10">
-                        <Link :href="dashboard()" class="flex items-center justify-center py-3">
+                        <Link href="/customer/dashboard" class="flex items-center justify-center py-3">
                             <img 
                                 src="/logo.png" 
                                 alt="TaskHive Logo" 

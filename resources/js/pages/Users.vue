@@ -28,22 +28,22 @@ const customers = [
     <Head title="Users" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6 bg-[#F9FAFB]">
+        <div class="flex h-full flex-1 flex-col gap-3 p-4 bg-[#F9FAFB]">
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-[#1E293B]">Users Management</h1>
-                    <p class="text-[#1E293B] mt-1">Manage employees and customers</p>
+                    <h1 class="text-xl font-bold text-[#1E293B]">Users Management</h1>
+                    <p class="text-sm text-[#1E293B] mt-0.5">Manage employees and customers</p>
                 </div>
-                <div class="flex gap-3">
-                    <button class="flex items-center gap-2 px-6 py-3 bg-[#06B6D4] text-white rounded-lg hover:bg-[#0891B2] transition-colors font-semibold">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex gap-2">
+                    <button class="flex items-center gap-1.5 px-4 py-2 bg-[#06B6D4] text-white rounded-lg hover:bg-[#0891B2] transition-colors font-semibold text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                         Add Employee
                     </button>
-                    <button class="flex items-center gap-2 px-6 py-3 bg-[#22C55E] text-white rounded-lg hover:bg-[#16A34A] transition-colors font-semibold">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button class="flex items-center gap-1.5 px-4 py-2 bg-[#22C55E] text-white rounded-lg hover:bg-[#16A34A] transition-colors font-semibold text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
                         Add Customer
@@ -52,84 +52,84 @@ const customers = [
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Total Employees</p>
-                    <p class="text-3xl font-bold text-[#06B6D4] mt-2">{{ employees.length }}</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">{{ employees.filter(e => e.status === 'active').length }} active</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="bg-white rounded-lg p-3 border border-[#CBD5E1] shadow-sm">
+                    <p class="text-xs text-[#1E293B] font-medium">Total Employees</p>
+                    <p class="text-2xl font-bold text-[#06B6D4] mt-1">{{ employees.length }}</p>
+                    <p class="text-xs text-[#1E293B]/60 mt-0.5">{{ employees.filter(e => e.status === 'active').length }} active</p>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Total Customers</p>
-                    <p class="text-3xl font-bold text-[#22C55E] mt-2">{{ customers.length }}</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">{{ customers.filter(c => c.status === 'active').length }} active</p>
+                <div class="bg-white rounded-lg p-3 border border-[#CBD5E1] shadow-sm">
+                    <p class="text-xs text-[#1E293B] font-medium">Total Customers</p>
+                    <p class="text-2xl font-bold text-[#22C55E] mt-1">{{ customers.length }}</p>
+                    <p class="text-xs text-[#1E293B]/60 mt-0.5">{{ customers.filter(c => c.status === 'active').length }} active</p>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Tasks Created</p>
-                    <p class="text-3xl font-bold text-[#F97316] mt-2">{{ customers.reduce((sum, c) => sum + c.tasksCreated, 0) }}</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">By customers</p>
+                <div class="bg-white rounded-lg p-3 border border-[#CBD5E1] shadow-sm">
+                    <p class="text-xs text-[#1E293B] font-medium">Tasks Created</p>
+                    <p class="text-2xl font-bold text-[#F97316] mt-1">{{ customers.reduce((sum, c) => sum + c.tasksCreated, 0) }}</p>
+                    <p class="text-xs text-[#1E293B]/60 mt-0.5">By customers</p>
                 </div>
             </div>
 
             <!-- Employees Table -->
-            <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-[#CBD5E1] flex items-center justify-between">
-                    <h2 class="text-xl font-bold text-[#1E293B]">Employees</h2>
+            <div class="bg-white rounded-lg border border-[#CBD5E1] shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-[#CBD5E1] flex items-center justify-between">
+                    <h2 class="text-base font-bold text-[#1E293B]">Employees</h2>
                     <input 
                         type="search" 
                         placeholder="Search employees..." 
-                        class="px-4 py-2 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#06B6D4] focus:border-transparent"
+                        class="px-3 py-1.5 text-sm border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#06B6D4] focus:border-transparent"
                     />
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-[#F9FAFB] border-b border-[#CBD5E1]">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Role</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Assigned Projects</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Role</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Email</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Assigned Projects</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#CBD5E1]">
                             <tr v-for="employee in employees" :key="employee.id" class="hover:bg-[#F9FAFB] transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-[#5B21B6] rounded-full flex items-center justify-center text-white font-semibold">
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 bg-[#5B21B6] rounded-full flex items-center justify-center text-white font-semibold text-xs">
                                             {{ employee.name.split(' ').map(n => n[0]).join('') }}
                                         </div>
-                                        <div class="font-semibold text-[#1E293B]">{{ employee.name }}</div>
+                                        <div class="font-semibold text-sm text-[#1E293B]">{{ employee.name }}</div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 bg-[#06B6D4]/10 text-[#06B6D4] rounded-full text-sm font-semibold">
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-[#06B6D4]/10 text-[#06B6D4] rounded-md text-xs font-semibold">
                                         {{ employee.role }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-[#1E293B]">{{ employee.email }}</td>
-                                <td class="px-6 py-4">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-[#1E293B]">{{ employee.email }}</td>
+                                <td class="px-4 py-3">
                                     <div class="flex flex-wrap gap-1">
-                                        <span v-for="project in employee.projects" :key="project" class="px-2 py-1 bg-[#F9FAFB] text-[#1E293B] rounded text-xs">
+                                        <span v-for="project in employee.projects" :key="project" class="px-2 py-0.5 bg-[#F9FAFB] text-[#1E293B] rounded text-[10px]">
                                             {{ project }}
                                         </span>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-4 py-3 whitespace-nowrap">
                                     <span 
                                         :class="{
                                             'bg-[#22C55E]/10 text-[#22C55E]': employee.status === 'active',
                                             'bg-[#EF4444]/10 text-[#EF4444]': employee.status === 'inactive'
                                         }"
-                                        class="px-3 py-1 rounded-full text-sm font-semibold capitalize"
+                                        class="px-2 py-1 rounded-md text-xs font-semibold capitalize"
                                     >
                                         {{ employee.status }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-4 py-3 whitespace-nowrap">
                                     <div class="flex gap-2">
-                                        <button class="text-[#06B6D4] hover:text-[#0891B2] font-semibold text-sm">Edit</button>
-                                        <button class="text-[#EF4444] hover:text-[#DC2626] font-semibold text-sm">Deactivate</button>
+                                        <button class="text-[#06B6D4] hover:text-[#0891B2] font-semibold text-xs">Edit</button>
+                                        <button class="text-[#EF4444] hover:text-[#DC2626] font-semibold text-xs">Deactivate</button>
                                     </div>
                                 </td>
                             </tr>
@@ -139,59 +139,59 @@ const customers = [
             </div>
 
             <!-- Customers Table -->
-            <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-[#CBD5E1] flex items-center justify-between">
-                    <h2 class="text-xl font-bold text-[#1E293B]">Customers</h2>
+            <div class="bg-white rounded-lg border border-[#CBD5E1] shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-[#CBD5E1] flex items-center justify-between">
+                    <h2 class="text-base font-bold text-[#1E293B]">Customers</h2>
                     <input 
                         type="search" 
                         placeholder="Search customers..." 
-                        class="px-4 py-2 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#06B6D4] focus:border-transparent"
+                        class="px-3 py-1.5 text-sm border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#06B6D4] focus:border-transparent"
                     />
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-[#F9FAFB] border-b border-[#CBD5E1]">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Email</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Assigned Projects</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Tasks Created</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Email</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Assigned Projects</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Tasks Created</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-2 text-left text-[10px] font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#CBD5E1]">
                             <tr v-for="customer in customers" :key="customer.id" class="hover:bg-[#F9FAFB] transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 bg-[#22C55E] rounded-full flex items-center justify-center text-white font-semibold">
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 bg-[#22C55E] rounded-full flex items-center justify-center text-white font-semibold text-xs">
                                             {{ customer.name.split(' ').map(n => n[0]).join('') }}
                                         </div>
-                                        <div class="font-semibold text-[#1E293B]">{{ customer.name }}</div>
+                                        <div class="font-semibold text-sm text-[#1E293B]">{{ customer.name }}</div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-[#1E293B]">{{ customer.email }}</td>
-                                <td class="px-6 py-4">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-[#1E293B]">{{ customer.email }}</td>
+                                <td class="px-4 py-3">
                                     <div class="flex flex-wrap gap-1">
-                                        <span v-for="project in customer.projects" :key="project" class="px-2 py-1 bg-[#F9FAFB] text-[#1E293B] rounded text-xs">
+                                        <span v-for="project in customer.projects" :key="project" class="px-2 py-0.5 bg-[#F9FAFB] text-[#1E293B] rounded text-[10px]">
                                             {{ project }}
                                         </span>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 bg-[#F97316]/10 text-[#F97316] rounded-full text-sm font-semibold">
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-[#F97316]/10 text-[#F97316] rounded-md text-xs font-semibold">
                                         {{ customer.tasksCreated }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 bg-[#22C55E]/10 text-[#22C55E] rounded-full text-sm font-semibold capitalize">
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-[#22C55E]/10 text-[#22C55E] rounded-md text-xs font-semibold capitalize">
                                         {{ customer.status }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-4 py-3 whitespace-nowrap">
                                     <div class="flex gap-2">
-                                        <button class="text-[#06B6D4] hover:text-[#0891B2] font-semibold text-sm">Edit</button>
-                                        <button class="text-[#EF4444] hover:text-[#DC2626] font-semibold text-sm">Deactivate</button>
+                                        <button class="text-[#06B6D4] hover:text-[#0891B2] font-semibold text-xs">Edit</button>
+                                        <button class="text-[#EF4444] hover:text-[#DC2626] font-semibold text-xs">Deactivate</button>
                                     </div>
                                 </td>
                             </tr>

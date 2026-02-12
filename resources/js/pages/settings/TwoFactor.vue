@@ -2,7 +2,6 @@
 import { Form, Head } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
-import Heading from '@/components/Heading.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
 import { Badge } from '@/components/ui/badge';
@@ -45,20 +44,19 @@ onUnmounted(() => {
         <h1 class="sr-only">Two-Factor Authentication Settings</h1>
 
         <SettingsLayout>
-            <div class="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Two-Factor Authentication"
-                    description="Manage your two-factor authentication settings"
-                />
+            <div class="space-y-8">
+                <div>
+                    <h2 class="text-lg font-semibold text-[#111827] mb-1">Two-Factor Authentication</h2>
+                    <p class="text-sm text-[#9CA3AF]">Manage your two-factor authentication settings</p>
+                </div>
 
                 <div
                     v-if="!twoFactorEnabled"
-                    class="flex flex-col items-start justify-start space-y-4"
+                    class="space-y-4"
                 >
-                    <Badge variant="destructive">Disabled</Badge>
+                    <Badge variant="destructive" class="text-xs">Disabled</Badge>
 
-                    <p class="text-muted-foreground">
+                    <p class="text-sm text-[#111827]">
                         When you enable two-factor authentication, you will be
                         prompted for a secure pin during login. This pin can be
                         retrieved from a TOTP-supported application on your
@@ -69,8 +67,9 @@ onUnmounted(() => {
                         <Button
                             v-if="hasSetupData"
                             @click="showSetupModal = true"
+                            class="bg-[#3B82F6] hover:bg-[#2563EB] text-white"
                         >
-                            <ShieldCheck />Continue Setup
+                            <ShieldCheck class="w-4 h-4 mr-2" />Continue Setup
                         </Button>
                         <Form
                             v-else
@@ -78,20 +77,20 @@ onUnmounted(() => {
                             @success="showSetupModal = true"
                             #default="{ processing }"
                         >
-                            <Button type="submit" :disabled="processing">
-                                <ShieldCheck />Enable 2FA</Button
-                            ></Form
-                        >
+                            <Button type="submit" :disabled="processing" class="bg-[#3B82F6] hover:bg-[#2563EB] text-white">
+                                <ShieldCheck class="w-4 h-4 mr-2" />Enable 2FA
+                            </Button>
+                        </Form>
                     </div>
                 </div>
 
                 <div
                     v-else
-                    class="flex flex-col items-start justify-start space-y-4"
+                    class="space-y-4"
                 >
-                    <Badge variant="default">Enabled</Badge>
+                    <Badge variant="default" class="text-xs bg-[#10B981] text-white">Enabled</Badge>
 
-                    <p class="text-muted-foreground">
+                    <p class="text-sm text-[#111827]">
                         With two-factor authentication enabled, you will be
                         prompted for a secure, random pin during login, which
                         you can retrieve from the TOTP-supported application on
@@ -100,14 +99,14 @@ onUnmounted(() => {
 
                     <TwoFactorRecoveryCodes />
 
-                    <div class="relative inline">
+                    <div>
                         <Form v-bind="disable.form()" #default="{ processing }">
                             <Button
                                 variant="destructive"
                                 type="submit"
                                 :disabled="processing"
                             >
-                                <ShieldBan />
+                                <ShieldBan class="w-4 h-4 mr-2" />
                                 Disable 2FA
                             </Button>
                         </Form>

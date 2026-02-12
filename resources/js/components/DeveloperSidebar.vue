@@ -2,12 +2,9 @@
 import { Link } from '@inertiajs/vue3';
 import { 
     LayoutGrid, 
-    FolderKanban, 
-    Users, 
     ClipboardList,
-    LogOut 
+    CheckCircle2
 } from 'lucide-vue-next';
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -19,34 +16,29 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import AppLogo from './AppLogo.vue';
+
+const newTasksCount = 2; // Would come from backend
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: dashboard(),
+        href: '/developer/dashboard',
         icon: LayoutGrid,
     },
     {
-        title: 'Projects',
-        href: '/admin/projects',
-        icon: FolderKanban,
-    },
-    {
-        title: 'Users',
-        href: '/users',
-        icon: Users,
-    },
-    {
-        title: 'Tasks',
-        href: '/tasks',
+        title: 'My Tasks',
+        href: '/developer/tasks',
         icon: ClipboardList,
+        badge: newTasksCount > 0 ? newTasksCount.toString() : undefined,
+    },
+    {
+        title: 'Completed Tasks',
+        href: '/developer/completed',
+        icon: CheckCircle2,
     },
 ];
-
-const footerNavItems: NavItem[] = [];
 </script>
 
 <template>
@@ -55,7 +47,7 @@ const footerNavItems: NavItem[] = [];
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child class="hover:bg-white/10">
-                        <Link :href="dashboard()" class="flex items-center justify-center py-3">
+                        <Link href="/developer/dashboard" class="flex items-center justify-center py-3">
                             <img 
                                 src="/logo.png" 
                                 alt="TaskHive Logo" 

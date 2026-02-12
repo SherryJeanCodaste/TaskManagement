@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
 import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
-import Heading from '@/components/Heading.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,12 +25,11 @@ const breadcrumbItems: BreadcrumbItem[] = [
         <h1 class="sr-only">Password Settings</h1>
 
         <SettingsLayout>
-            <div class="space-y-6">
-                <Heading
-                    variant="small"
-                    title="Update password"
-                    description="Ensure your account is using a long, random password to stay secure"
-                />
+            <div class="space-y-8">
+                <div>
+                    <h2 class="text-lg font-semibold text-[#111827] mb-1">Update Password</h2>
+                    <p class="text-sm text-[#9CA3AF]">Ensure your account is using a long, random password to stay secure</p>
+                </div>
 
                 <Form
                     v-bind="PasswordController.update.form()"
@@ -47,53 +45,53 @@ const breadcrumbItems: BreadcrumbItem[] = [
                     class="space-y-6"
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
-                    <div class="grid gap-2">
-                        <Label for="current_password">Current password</Label>
+                    <div class="space-y-2">
+                        <Label for="current_password" class="text-sm font-medium text-[#111827]">Current Password</Label>
                         <Input
                             id="current_password"
                             name="current_password"
                             type="password"
-                            class="mt-1 block w-full"
+                            class="w-full"
                             autocomplete="current-password"
                             placeholder="Current password"
                         />
-                        <InputError :message="errors.current_password" />
+                        <InputError class="text-xs" :message="errors.current_password" />
                     </div>
 
-                    <div class="grid gap-2">
-                        <Label for="password">New password</Label>
+                    <div class="space-y-2">
+                        <Label for="password" class="text-sm font-medium text-[#111827]">New Password</Label>
                         <Input
                             id="password"
                             name="password"
                             type="password"
-                            class="mt-1 block w-full"
+                            class="w-full"
                             autocomplete="new-password"
                             placeholder="New password"
                         />
-                        <InputError :message="errors.password" />
+                        <InputError class="text-xs" :message="errors.password" />
                     </div>
 
-                    <div class="grid gap-2">
-                        <Label for="password_confirmation"
-                            >Confirm password</Label
-                        >
+                    <div class="space-y-2">
+                        <Label for="password_confirmation" class="text-sm font-medium text-[#111827]">Confirm Password</Label>
                         <Input
                             id="password_confirmation"
                             name="password_confirmation"
                             type="password"
-                            class="mt-1 block w-full"
+                            class="w-full"
                             autocomplete="new-password"
                             placeholder="Confirm password"
                         />
-                        <InputError :message="errors.password_confirmation" />
+                        <InputError class="text-xs" :message="errors.password_confirmation" />
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4 pt-2">
                         <Button
                             :disabled="processing"
                             data-test="update-password-button"
-                            >Save password</Button
+                            class="bg-[#3B82F6] hover:bg-[#2563EB] text-white"
                         >
+                            Save Password
+                        </Button>
 
                         <Transition
                             enter-active-class="transition ease-in-out"
@@ -103,9 +101,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
                         >
                             <p
                                 v-show="recentlySuccessful"
-                                class="text-sm text-neutral-600"
+                                class="text-sm text-[#10B981] font-medium"
                             >
-                                Saved.
+                                Saved successfully.
                             </p>
                         </Transition>
                     </div>
