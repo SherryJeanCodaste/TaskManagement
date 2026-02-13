@@ -15,6 +15,8 @@ class Task extends Model
         'category',
         'priority',
         'status',
+        'progress',
+        'progress_image',
         'customer_id',
         'developer_id',
         'project_id',
@@ -45,5 +47,10 @@ class Task extends Model
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(TaskComment::class)->with('user')->latest();
     }
 }

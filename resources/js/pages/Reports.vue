@@ -8,20 +8,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Reports', href: '/reports' },
 ];
 
-// Mock data for reports
-const projectStats = [
-    { name: 'E-Commerce Platform', tasks: 12, completed: 8, inProgress: 3, pending: 1 },
-    { name: 'Mobile App', tasks: 8, completed: 3, inProgress: 3, pending: 2 },
-    { name: 'CRM System', tasks: 15, completed: 15, inProgress: 0, pending: 0 },
-];
+// No sample data - using real backend data
+const projectStats = [];
 
-const employeePerformance = [
-    { name: 'John Doe', role: 'Frontend', tasksCompleted: 15, tasksInProgress: 2, efficiency: 88 },
-    { name: 'Jane Smith', role: 'Backend', tasksCompleted: 18, tasksInProgress: 3, efficiency: 92 },
-    { name: 'Bob Wilson', role: 'Server Admin', tasksCompleted: 12, tasksInProgress: 1, efficiency: 85 },
-    { name: 'Alice Brown', role: 'Frontend', tasksCompleted: 8, tasksInProgress: 2, efficiency: 80 },
-    { name: 'Charlie Davis', role: 'Backend', tasksCompleted: 10, tasksInProgress: 1, efficiency: 83 },
-];
+const employeePerformance = [];
 </script>
 
 <template>

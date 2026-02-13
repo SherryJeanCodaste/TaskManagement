@@ -15,16 +15,15 @@ Route::get('dashboard', function () {
     
     // Redirect based on role
     if ($user->role === 'admin') {
-        return Inertia::render('Dashboard');
+        return app(\App\Http\Controllers\DashboardController::class)->adminDashboard();
     } elseif ($user->role === 'customer') {
         return redirect('/customer/dashboard');
-    } elseif ($user->role === 'employee') {
-        return redirect('/employee/dashboard');
     } elseif ($user->role === 'developer') {
         return redirect('/developer/dashboard');
     }
     
-    return Inertia::render('Dashboard');
+    // Default fallback
+    return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Admin Routes
@@ -51,28 +50,40 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('users', function () {
-        if (auth()->user()->role !== 'admin') {
-            return redirect('/dashboard');
-        }
-        return Inertia::render('Users');
-    })->name('users');
+    // Admin Tasks Routes
+    Route::get('tasks', [\App\Http\Controllers\TaskController::class, 'index'])->name('tasks');
+    Route::get('tasks/{task}', [\App\Http\Controllers\TaskController::class, 'show'])->name('tasks.show');
 
-    Route::get('tasks', function () {
+    // Admin Users Routes
+    Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users');
+    Route::get('users/employee/create', function () {
         if (auth()->user()->role !== 'admin') {
             return redirect('/dashboard');
         }
-        return Inertia::render('Tasks');
-    })->name('tasks');
-
-    Route::get('tasks/{id}', function ($id) {
+        return Inertia::render('UserCreate', ['userType' => 'employee']);
+    })->name('users.employee.create');
+    Route::get('users/customer/create', function () {
         if (auth()->user()->role !== 'admin') {
             return redirect('/dashboard');
         }
-        return Inertia::render('AdminTaskDetail', [
-            'taskId' => $id
+        // Get all projects for selection
+        // Note: Customer can only be assigned to ONE project
+        // Projects without customers will be prioritized in the UI
+        $projects = \App\Models\Project::get(['id', 'name', 'customer_id']);
+        
+        return Inertia::render('UserCreate', [
+            'userType' => 'customer',
+            'projects' => $projects
         ]);
-    })->name('tasks.show');
+    })->name('users.customer.create');
+    Route::post('users/employee', [\App\Http\Controllers\UserController::class, 'storeEmployee'])->name('users.employee.store');
+    Route::post('users/customer', [\App\Http\Controllers\UserController::class, 'storeCustomer'])->name('users.customer.store');
+    Route::put('users/{user}', [\App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+    Route::post('users/{user}/deactivate', [\App\Http\Controllers\UserController::class, 'deactivate'])->name('users.deactivate');
+    Route::delete('users/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
+
+    // Notifications routes
+    Route::get('notifications/unread-count', [\App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
 
     Route::get('reports', function () {
         if (auth()->user()->role !== 'admin') {
@@ -84,28 +95,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Customer Routes
 Route::middleware(['auth', 'verified'])->prefix('customer')->group(function () {
-    Route::get('dashboard', function () {
-        if (auth()->user()->role !== 'customer') {
-            return redirect('/dashboard');
-        }
-        return Inertia::render('CustomerDashboard');
-    })->name('customer.dashboard');
-
-    Route::get('tasks', function () {
-        if (auth()->user()->role !== 'customer') {
-            return redirect('/dashboard');
-        }
-        return Inertia::render('CustomerTasks');
-    })->name('customer.tasks');
-
-    Route::get('tasks/{id}', function ($id) {
-        if (auth()->user()->role !== 'customer') {
-            return redirect('/dashboard');
-        }
-        return Inertia::render('CustomerTaskDetail', [
-            'taskId' => $id
-        ]);
-    })->name('customer.tasks.show');
+    Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'customerDashboard'])->name('customer.dashboard');
+    Route::get('tasks', [\App\Http\Controllers\TaskController::class, 'customerTasks'])->name('customer.tasks');
+    Route::get('tasks/create', [\App\Http\Controllers\TaskController::class, 'create'])->name('customer.tasks.create');
+    Route::post('tasks', [\App\Http\Controllers\TaskController::class, 'store'])->name('customer.tasks.store');
+    Route::get('tasks/{task}', [\App\Http\Controllers\TaskController::class, 'customerTaskDetail'])->name('customer.tasks.show');
 });
 
 // Employee Routes (placeholder for future)
@@ -120,28 +114,11 @@ Route::middleware(['auth', 'verified'])->prefix('employee')->group(function () {
 
 // Developer Routes
 Route::middleware(['auth', 'verified'])->prefix('developer')->group(function () {
-    Route::get('dashboard', function () {
-        if (auth()->user()->role !== 'developer') {
-            return redirect('/dashboard');
-        }
-        return Inertia::render('DeveloperDashboard');
-    })->name('developer.dashboard');
-
-    Route::get('tasks', function () {
-        if (auth()->user()->role !== 'developer') {
-            return redirect('/dashboard');
-        }
-        return Inertia::render('DeveloperTasks');
-    })->name('developer.tasks');
-
-    Route::get('tasks/{id}', function ($id) {
-        if (auth()->user()->role !== 'developer') {
-            return redirect('/dashboard');
-        }
-        return Inertia::render('DeveloperTaskDetail', [
-            'taskId' => $id
-        ]);
-    })->name('developer.tasks.show');
+    Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'developerDashboard'])->name('developer.dashboard');
+    Route::get('tasks', [\App\Http\Controllers\TaskController::class, 'developerTasks'])->name('developer.tasks');
+    Route::get('tasks/{task}', [\App\Http\Controllers\TaskController::class, 'developerTaskDetail'])->name('developer.tasks.show');
+    Route::post('tasks/{task}/update', [\App\Http\Controllers\TaskController::class, 'updateDeveloperTask'])->name('developer.tasks.update');
+    Route::post('tasks/{task}/status', [\App\Http\Controllers\TaskController::class, 'updateStatus'])->name('developer.tasks.updateStatus');
 
     Route::get('completed', function () {
         if (auth()->user()->role !== 'developer') {

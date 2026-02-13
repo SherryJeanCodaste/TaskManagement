@@ -3,33 +3,17 @@ import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 
-// Mock data - would come from props in real implementation
-const task = {
-    id: 1,
-    title: 'Design Homepage',
-    description: 'Create a modern, responsive homepage design for the e-commerce platform. Should include hero section, featured products, testimonials, and call-to-action sections.',
-    project: 'E-Commerce Platform',
-    category: 'Frontend',
-    priority: 'high',
-    status: 'in-progress',
-    createdAt: '2026-02-08',
-    dueDate: '2026-02-15',
-    customer: 'John Smith',
-    assignedDeveloper: 'Alice Johnson',
-    completionProof: null,
-    comments: [
-        { id: 1, author: 'Alice Johnson', message: 'Started working on the homepage layout. Will share initial mockups by tomorrow.', date: '2026-02-09' },
-        { id: 2, author: 'System', message: 'Task status updated to In Progress.', date: '2026-02-09' }
-    ]
-};
+// TODO: This should receive task data as props from the backend
+// For now, using empty object - page will show "No task data" until backend integration
+const task = null;
 
-// Map status to step number
+// Map status to step number (4-step flow)
 const statusToStep: Record<string, number> = {
-    'pending': 1,
-    'assigned': 2,
-    'in-progress': 3,
-    'review': 4,
-    'completed': 5
+    'assigned': 1,
+    'pending': 1, // Treat pending same as assigned
+    'in-progress': 2,
+    'review': 3,
+    'completed': 4
 };
 
 const currentStep = statusToStep[task.status] || 1;
@@ -41,11 +25,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const statusSteps = [
-    { step: 1, label: 'Pending', color: 'bg-[#3B82F6]', lightColor: 'bg-[#3B82F6]/30' },
-    { step: 2, label: 'Assigned', color: 'bg-[#F59E0B]', lightColor: 'bg-[#F59E0B]/30' },
-    { step: 3, label: 'In Progress', color: 'bg-[#F97316]', lightColor: 'bg-[#F97316]/30' },
-    { step: 4, label: 'Review', color: 'bg-[#8B5CF6]', lightColor: 'bg-[#8B5CF6]/30' },
-    { step: 5, label: 'Completed', color: 'bg-[#10B981]', lightColor: 'bg-[#10B981]/30' },
+    { step: 1, label: 'Assigned', color: 'bg-[#3B82F6]', lightColor: 'bg-[#3B82F6]/30' },
+    { step: 2, label: 'In Progress', color: 'bg-[#F97316]', lightColor: 'bg-[#F97316]/30' },
+    { step: 3, label: 'For Review', color: 'bg-[#8B5CF6]', lightColor: 'bg-[#8B5CF6]/30' },
+    { step: 4, label: 'Completed', color: 'bg-[#10B981]', lightColor: 'bg-[#10B981]/30' },
 ];
 
 // Get developer box color based on category
@@ -78,7 +61,7 @@ const devColor = getDeveloperColor(task.category);
                     <div class="absolute top-4 left-0 right-0 h-0.5 bg-[#E5E7EB]">
                         <div 
                             class="h-full bg-[#111827] transition-all duration-500"
-                            :style="{ width: currentStep === 1 ? '0%' : `${((currentStep - 1) / 4) * 100}%` }"
+                            :style="{ width: currentStep === 1 ? '0%' : `${((currentStep - 1) / 3) * 100}%` }"
                         ></div>
                     </div>
 

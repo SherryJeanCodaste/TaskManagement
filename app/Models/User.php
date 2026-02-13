@@ -51,4 +51,55 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+
+    /**
+     * Relationships
+     */
+    public function createdTasks()
+    {
+        return $this->hasMany(Task::class, 'customer_id');
+    }
+
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_developer_id');
+    }
+
+    public function customerProjects()
+    {
+        return $this->hasMany(Project::class, 'customer_id');
+    }
+
+    public function frontendProjects()
+    {
+        return $this->hasMany(Project::class, 'frontend_developer_id');
+    }
+
+    public function backendProjects()
+    {
+        return $this->hasMany(Project::class, 'backend_developer_id');
+    }
+
+    public function serverAdminProjects()
+    {
+        return $this->hasMany(Project::class, 'server_admin_id');
+    }
+
+    /**
+     * Helper methods
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isCustomer()
+    {
+        return $this->role === 'customer';
+    }
+
+    public function isDeveloper()
+    {
+        return $this->role === 'developer';
+    }
 }

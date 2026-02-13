@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import NotificationToast from '@/components/NotificationToast.vue';
 import { home } from '@/routes';
 
 defineProps<{
@@ -87,5 +88,8 @@ defineProps<{
                 </div>
             </div>
         </div>
+        
+        <!-- Global Notification Toast -->
+        <NotificationToast />
     </div>
 </template>

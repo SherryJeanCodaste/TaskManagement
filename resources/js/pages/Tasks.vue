@@ -8,17 +8,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tasks', href: '/tasks' },
 ];
 
-// Mock data
-const tasks = [
-    { id: 1, title: 'Design Homepage', project: 'E-Commerce Platform', category: 'Frontend', status: 'completed', assignee: 'John Doe', priority: 'high', dueDate: '2026-02-10' },
-    { id: 2, title: 'Setup API Endpoints', project: 'Mobile App', category: 'Backend', status: 'in-progress', assignee: 'Jane Smith', priority: 'high', dueDate: '2026-02-12' },
-    { id: 3, title: 'Configure Server', project: 'CRM System', category: 'Server', status: 'pending', assignee: 'Bob Wilson', priority: 'medium', dueDate: '2026-02-15' },
-    { id: 4, title: 'User Authentication', project: 'E-Commerce Platform', category: 'Backend', status: 'in-progress', assignee: 'Charlie Davis', priority: 'high', dueDate: '2026-02-11' },
-    { id: 5, title: 'Payment Integration', project: 'E-Commerce Platform', category: 'Backend', status: 'pending', assignee: 'Jane Smith', priority: 'high', dueDate: '2026-02-14' },
-    { id: 6, title: 'Mobile UI Design', project: 'Mobile App', category: 'Frontend', status: 'in-progress', assignee: 'Alice Brown', priority: 'medium', dueDate: '2026-02-13' },
-    { id: 7, title: 'Database Optimization', project: 'CRM System', category: 'Backend', status: 'completed', assignee: 'Jane Smith', priority: 'low', dueDate: '2026-02-08' },
-    { id: 8, title: 'SSL Certificate Setup', project: 'Mobile App', category: 'Server', status: 'pending', assignee: 'Bob Wilson', priority: 'high', dueDate: '2026-02-16' },
-];
+// No sample data - using real backend data
+const tasks = [];
 
 const stats = {
     total: tasks.length,

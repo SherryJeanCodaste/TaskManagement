@@ -1,79 +1,95 @@
 <script setup lang="ts">
-import { Head, Link, useForm, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
+
+interface Project {
+    id: number;
+    name: string;
+    description: string;
+    status: 'active' | 'inactive';
+    customer_id: number;
+    frontend_developer_id: number | null;
+    backend_developer_id: number | null;
+    server_admin_id: number | null;
+}
+
+interface User {
+    id: number;
+    name: string;
+    developer_type?: string;
+}
+
+interface Props {
+    project: Project;
+}
+
+const props = defineProps<Props>();
+
+const customers = ref<User[]>([]);
+const frontendDevelopers = ref<User[]>([]);
+const backendDevelopers = ref<User[]>([]);
+const serverAdministrators = ref<User[]>([]);
+const loading = ref(true);
+
+const form = useForm({
+    name: props.project.name,
+    description: props.project.description,
+    status: props.project.status,
+    customer_id: props.project.customer_id,
+    frontend_developer_id: props.project.frontend_developer_id,
+    backend_developer_id: props.project.backend_developer_id,
+    server_admin_id: props.project.server_admin_id,
+});
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/dashboard' },
     { title: 'Projects', href: '/admin/projects' },
-    { title: 'Create Project', href: '#' },
+    { title: 'Edit Project', href: '#' },
 ];
 
-// Hardcoded data for frontend-only version
-const customers = [
-    { id: 2, name: 'Test User' },
-    { id: 5, name: 'John Doe' },
-    { id: 6, name: 'Jane Smith' },
-    { id: 3, name: 'Customer User' },
-];
-
-const frontendDevelopers = [
-    { id: 8, name: 'John Smith' },
-];
-
-const backendDevelopers = [
-    { id: 9, name: 'Sarah Johnson' },
-];
-
-const serverAdministrators = [
-    { id: 10, name: 'Mike Wilson' },
-];
-
-const form = useForm({
-    name: '',
-    description: '',
-    status: 'active' as 'active' | 'inactive',
-    customer_id: null as number | null,
-    frontend_developer_id: null as number | null,
-    backend_developer_id: null as number | null,
-    server_admin_id: null as number | null,
+// Fetch project data and users
+onMounted(async () => {
+    try {
+        const response = await fetch(`/admin/projects/${props.project.id}/edit`);
+        const data = await response.json();
+        
+        customers.value = data.customers;
+        frontendDevelopers.value = data.frontendDevelopers;
+        backendDevelopers.value = data.backendDevelopers;
+        serverAdministrators.value = data.serverAdministrators;
+    } catch (error) {
+        console.error('Error fetching project data:', error);
+    } finally {
+        loading.value = false;
+    }
 });
 
-function createProject() {
-    form.post('/admin/projects', {
-        onSuccess: () => {
-            // Success message will be handled by global NotificationToast
-            // Redirect handled by backend
-        },
-    });
+function updateProject() {
+    form.put(`/admin/projects/${props.project.id}`);
 }
 </script>
 
 <template>
-    <Head title="Create Project" />
+    <Head title="Edit Project" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col p-6 bg-white">
-            <div class="w-full max-w-6xl mx-auto">
+            <div class="w-full max-w-4xl mx-auto">
                 <!-- Header -->
                 <div class="mb-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h1 class="text-xl font-bold text-[#111827]">Create New Project</h1>
-                            <p class="text-sm text-[#6B7280] mt-1">Fill in the project details and assign team members</p>
-                        </div>
-                        <Link 
-                            href="/admin/projects" 
-                            class="text-sm text-[#6B7280] hover:text-[#111827]"
-                        >
-                            Cancel
-                        </Link>
-                    </div>
+                    <h1 class="text-xl font-bold text-[#111827] mb-2">Edit Project</h1>
+                    <p class="text-sm text-[#6B7280]">Update project details and team assignments</p>
+                </div>
+
+                <!-- Loading State -->
+                <div v-if="loading" class="text-center py-8">
+                    <div class="text-sm text-[#6B7280]">Loading project data...</div>
                 </div>
 
                 <!-- Form -->
-                <form @submit.prevent="createProject">
+                <form v-else @submit.prevent="updateProject" class="space-y-6">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Left Column -->
                         <div class="space-y-4">
@@ -88,8 +104,8 @@ function createProject() {
                                     type="text"
                                     required
                                     class="w-full px-3 py-2 border border-[#E5E7EB] rounded-lg text-sm text-[#111827] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6]"
-                                    placeholder="Enter project name"
                                 />
+                                <div v-if="form.errors.name" class="text-red-500 text-xs mt-1">{{ form.errors.name }}</div>
                             </div>
 
                             <!-- Description -->
@@ -102,8 +118,8 @@ function createProject() {
                                     v-model="form.description" 
                                     rows="3"
                                     class="w-full px-3 py-2 border border-[#E5E7EB] rounded-lg text-sm text-[#111827] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] resize-none"
-                                    placeholder="Optional description"
                                 ></textarea>
+                                <div v-if="form.errors.description" class="text-red-500 text-xs mt-1">{{ form.errors.description }}</div>
                             </div>
 
                             <!-- Project Status -->
@@ -119,6 +135,7 @@ function createProject() {
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
+                                <div v-if="form.errors.status" class="text-red-500 text-xs mt-1">{{ form.errors.status }}</div>
                             </div>
 
                             <!-- Customer -->
@@ -137,6 +154,7 @@ function createProject() {
                                         {{ customer.name }}
                                     </option>
                                 </select>
+                                <div v-if="form.errors.customer_id" class="text-red-500 text-xs mt-1">{{ form.errors.customer_id }}</div>
                             </div>
                         </div>
 
@@ -159,6 +177,7 @@ function createProject() {
                                         {{ dev.name }}
                                     </option>
                                 </select>
+                                <div v-if="form.errors.frontend_developer_id" class="text-red-500 text-xs mt-1">{{ form.errors.frontend_developer_id }}</div>
                             </div>
 
                             <!-- Backend Developer -->
@@ -176,6 +195,7 @@ function createProject() {
                                         {{ dev.name }}
                                     </option>
                                 </select>
+                                <div v-if="form.errors.backend_developer_id" class="text-red-500 text-xs mt-1">{{ form.errors.backend_developer_id }}</div>
                             </div>
 
                             <!-- Server Administrator -->
@@ -193,12 +213,13 @@ function createProject() {
                                         {{ admin.name }}
                                     </option>
                                 </select>
+                                <div v-if="form.errors.server_admin_id" class="text-red-500 text-xs mt-1">{{ form.errors.server_admin_id }}</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="flex justify-end gap-3 mt-6 pt-6 border-t border-[#E5E7EB]">
+                    <div class="flex justify-end gap-3 pt-6 border-t border-[#E5E7EB]">
                         <Link 
                             href="/admin/projects" 
                             class="px-4 py-2 border border-[#E5E7EB] text-[#111827] rounded-lg hover:bg-[#F9FAFB] text-sm font-medium"
@@ -207,9 +228,10 @@ function createProject() {
                         </Link>
                         <button 
                             type="submit" 
-                            class="px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] text-sm font-medium"
+                            :disabled="form.processing"
+                            class="px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] text-sm font-medium disabled:opacity-50"
                         >
-                            Create Project
+                            {{ form.processing ? 'Updating...' : 'Update Project' }}
                         </button>
                     </div>
                 </form>

@@ -8,14 +8,8 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Completed Tasks', href: '/developer/completed' },
 ];
 
-// Mock data
-const completedTasks = [
-    { id: 6, title: 'Landing Page Redesign', category: 'UI/UX Design', customer: 'WebFlow Co', completedDate: '2026-01-19', priority: 'high' },
-    { id: 7, title: 'Product Catalog UI', category: 'UI/UX Design', customer: 'E-Shop Ltd', completedDate: '2026-01-12', priority: 'medium' },
-    { id: 8, title: 'Brand Identity Package', category: 'Graphic Design', customer: 'StartUp Inc', completedDate: '2026-01-05', priority: 'high' },
-    { id: 9, title: 'Newsletter Template', category: 'Graphic Design', customer: 'Marketing Pro', completedDate: '2025-12-28', priority: 'low' },
-    { id: 10, title: 'Admin Dashboard Redesign', category: 'UI/UX Design', customer: 'SaaS Platform', completedDate: '2025-12-20', priority: 'high' },
-];
+// No sample data - using real backend data
+const completedTasks = [];
 </script>
 
 <template>

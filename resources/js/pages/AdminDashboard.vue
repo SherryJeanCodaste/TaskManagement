@@ -1,43 +1,38 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 
 interface Project {
     id: number;
     name: string;
-    description: string | null;
-    customer: { id: number; name: string };
-    frontend_developer: { id: number; name: string } | null;
-    backend_developer: { id: number; name: string } | null;
-    server_admin: { id: number; name: string } | null;
-    tasks_count: number;
-    status: 'active' | 'archived';
-    created_at: string;
+    description: string;
+    status: 'active' | 'inactive';
+    customer: string;
+    frontend_developer: string | null;
+    backend_developer: string | null;
+    server_admin: string | null;
+    total_tasks: number;
+    overall_progress: number;
 }
 
-interface Props {
-    projects: Project[];
-    filters: {
-        status: string;
-        search: string;
-    };
+interface Stats {
+    total_projects: number;
+    active_projects: number;
+    total_users: number;
+    total_tasks: number;
+    pending_tasks: number;
+    in_progress_tasks: number;
+    completed_tasks: number;
 }
 
-const props = defineProps<Props>();
+defineProps<{
+    stats?: Stats;
+    projects?: Project[];
+}>();
 
-// Debug: Log the projects data
-console.log('Projects data:', props.projects);
-console.log('Projects length:', props.projects.length);
-
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Projects', href: '/admin/projects' },
-];
-
-const searchQuery = ref(props.filters.search);
-const statusFilter = ref(props.filters.status);
 const showDeleteModal = ref(false);
 const showEditModal = ref(false);
 const selectedProject = ref<Project | null>(null);
@@ -55,23 +50,7 @@ const frontendDevelopers = ref([]);
 const backendDevelopers = ref([]);
 const serverAdministrators = ref([]);
 
-const stats = computed(() => ({
-    total: props.projects.length,
-    active: props.projects.filter(p => p.status === 'active').length,
-    archived: props.projects.filter(p => p.status === 'archived').length,
-    totalTasks: props.projects.reduce((sum, p) => sum + p.tasks_count, 0),
-}));
-
-function openDeleteModal(project: Project) {
-    selectedProject.value = project;
-    showDeleteModal.value = true;
-}
-
-function closeDeleteModal() {
-    showDeleteModal.value = false;
-    selectedProject.value = null;
-}
-
+// Functions
 async function openEditModal(project: Project) {
     selectedProject.value = project;
     
@@ -128,6 +107,23 @@ function updateProject() {
     });
 }
 
+function archiveProject(project: Project) {
+    const action = project.status === 'active' ? 'archive' : 'activate';
+    router.post(`/admin/projects/${project.id}/${action}`, {}, {
+        preserveScroll: true,
+    });
+}
+
+function openDeleteModal(project: Project) {
+    selectedProject.value = project;
+    showDeleteModal.value = true;
+}
+
+function closeDeleteModal() {
+    showDeleteModal.value = false;
+    selectedProject.value = null;
+}
+
 function confirmDelete() {
     if (!selectedProject.value) return;
     
@@ -138,200 +134,179 @@ function confirmDelete() {
     });
 }
 
-function archiveProject(project: Project) {
-    router.post(`/admin/projects/${project.id}/archive`);
-}
-
-function activateProject(project: Project) {
-    router.post(`/admin/projects/${project.id}/activate`);
-}
-
-function handleSearch() {
-    router.get('/admin/projects', { search: searchQuery.value, status: statusFilter.value }, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-}
-
-function handleStatusFilter() {
-    router.get('/admin/projects', { search: searchQuery.value, status: statusFilter.value }, {
-        preserveState: true,
-        preserveScroll: true,
-    });
-}
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Dashboard',
+        href: dashboard().url,
+    },
+];
 </script>
 
 <template>
-    <Head title="Projects" />
+    <Head title="Admin Dashboard" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 p-6 bg-[#F9FAFB]">
-            <div class="w-full max-w-7xl mx-auto space-y-4">
+        <div class="flex h-full flex-1 flex-col p-6 bg-white">
+            <div class="w-full max-w-7xl mx-auto space-y-6">
                 <!-- Header -->
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-[#111827]">Projects</h1>
-                        <p class="text-sm text-[#6B7280] mt-1">Manage projects and assign developers</p>
-                    </div>
-                    <Link 
-                        href="/admin/projects/create" 
-                        class="bg-[#5B21B6] hover:bg-[#6D28D9] text-white px-4 py-2 rounded-lg text-sm font-medium inline-flex items-center gap-2"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Create Project
-                    </Link>
+                <div class="mb-6">
+                    <h1 class="text-xl font-bold text-[#111827] mb-2">Admin Dashboard</h1>
+                    <p class="text-sm text-[#6B7280]">Manage projects, users, and system-wide task activity.</p>
                 </div>
 
-                <!-- Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <!-- Summary Stats Cards -->
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <!-- Total Projects -->
                     <div class="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                        <p class="text-xs text-[#6B7280] mb-1">Total Projects</p>
-                        <p class="text-xl font-bold text-[#111827]">{{ stats.total }}</p>
+                        <p class="text-xs text-[#9CA3AF] mb-1">Total Projects</p>
+                        <p class="text-xl font-semibold text-[#111827]">{{ stats?.total_projects || 0 }}</p>
                     </div>
+
+                    <!-- Active Projects -->
                     <div class="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                        <p class="text-xs text-[#6B7280] mb-1">Active Projects</p>
-                        <p class="text-xl font-bold text-[#3B82F6]">{{ stats.active }}</p>
+                        <p class="text-xs text-[#9CA3AF] mb-1">Active Projects</p>
+                        <p class="text-xl font-semibold text-[#111827]">{{ stats?.active_projects || 0 }}</p>
                     </div>
+
+                    <!-- Total Users -->
                     <div class="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                        <p class="text-xs text-[#6B7280] mb-1">Archived</p>
-                        <p class="text-xl font-bold text-[#9CA3AF]">{{ stats.archived }}</p>
+                        <p class="text-xs text-[#9CA3AF] mb-1">Total Users</p>
+                        <p class="text-xl font-semibold text-[#111827]">{{ stats?.total_users || 0 }}</p>
                     </div>
+
+                    <!-- Total Tasks -->
                     <div class="bg-white rounded-lg p-3 border border-[#E5E7EB]">
-                        <p class="text-xs text-[#6B7280] mb-1">Total Tasks</p>
-                        <p class="text-xl font-bold text-[#F97316]">{{ stats.totalTasks }}</p>
+                        <p class="text-xs text-[#9CA3AF] mb-1">Total Tasks</p>
+                        <p class="text-xl font-semibold text-[#111827]">{{ stats?.total_tasks || 0 }}</p>
                     </div>
                 </div>
 
-                <!-- Projects Grid -->
-                <div v-if="projects.length === 0" class="bg-white rounded-lg border border-[#E5E7EB] p-12 text-center">
-                    <svg class="w-16 h-16 mx-auto text-[#9CA3AF] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
-                    </svg>
-                    <h3 class="text-lg font-semibold text-[#111827] mb-2">No projects found</h3>
-                    <p class="text-sm text-[#6B7280] mb-4">Get started by creating your first project</p>
-                    <Link 
-                        href="/admin/projects/create" 
-                        class="inline-flex items-center gap-2 bg-[#5B21B6] hover:bg-[#6D28D9] text-white px-4 py-2 rounded-lg text-sm font-medium"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Create Project
-                    </Link>
-                </div>
+                <!-- Projects Section -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-[#111827]">Projects Overview</h2>
+                        <Link 
+                            href="/admin/projects/create" 
+                            class="px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] text-sm font-medium"
+                        >
+                            Create Project
+                        </Link>
+                    </div>
 
-                <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div 
-                        v-for="project in projects" 
-                        :key="project.id" 
-                        class="bg-white rounded-lg border border-[#E5E7EB] p-4 hover:shadow-md transition-shadow"
-                    >
-                        <!-- Project Header -->
-                        <div class="flex items-start justify-between mb-3">
-                            <div class="flex-1">
-                                <h3 class="text-sm font-semibold text-[#111827] mb-1">{{ project.name }}</h3>
-                                <p class="text-xs text-[#6B7280]" v-if="project.description">
-                                    {{ project.description.substring(0, 50) }}{{ project.description.length > 50 ? '...' : '' }}
-                                </p>
+                    <!-- Project Cards Grid -->
+                    <div v-if="projects && projects.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div v-for="project in projects" :key="project.id" 
+                            class="bg-white rounded-lg border border-[#E5E7EB] p-4 hover:shadow-sm transition-shadow">
+                            
+                            <!-- Project Header -->
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-[#111827] text-sm mb-1">{{ project.name }}</h3>
+                                    <p class="text-xs text-[#6B7280] line-clamp-2">{{ project.description || 'No description' }}</p>
+                                </div>
+                                <span 
+                                    :class="{
+                                        'bg-[#D1FAE5] text-[#065F46]': project.status === 'active',
+                                        'bg-[#FEE2E2] text-[#991B1B]': project.status === 'inactive'
+                                    }"
+                                    class="px-2 py-1 rounded text-xs font-medium"
+                                >
+                                    {{ project.status === 'active' ? 'Active' : 'Inactive' }}
+                                </span>
                             </div>
-                            <span 
-                                :class="{
-                                    'bg-[#D1FAE5] text-[#065F46]': project.status === 'active',
-                                    'bg-[#F3F4F6] text-[#374151]': project.status === 'archived'
-                                }"
-                                class="px-2 py-1 rounded text-xs font-medium capitalize ml-2"
-                            >
-                                {{ project.status }}
-                            </span>
-                        </div>
 
-                        <!-- Customer -->
-                        <div class="mb-3 pb-2 border-b border-[#E5E7EB]">
-                            <p class="text-xs text-[#6B7280] mb-1">Customer</p>
-                            <p class="text-xs font-medium text-[#111827]">{{ project.customer.name }}</p>
-                        </div>
+                            <!-- Customer -->
+                            <div class="mb-3">
+                                <p class="text-xs text-[#6B7280] mb-1">Customer</p>
+                                <p class="text-sm font-medium text-[#111827]">{{ project.customer }}</p>
+                            </div>
 
-                        <!-- Team Section -->
-                        <div class="mb-3">
-                            <p class="text-xs text-[#6B7280] mb-2 font-medium">Assigned Team</p>
-                            <div class="space-y-1">
-                                <!-- Frontend Developer -->
-                                <div class="flex items-center gap-2 p-1.5 bg-[#EFF6FF] rounded">
-                                    <div class="w-5 h-5 bg-[#3B82F6] rounded-full flex items-center justify-center flex-shrink-0">
-                                        <span class="text-white text-xs font-bold">FE</span>
+                            <!-- Assigned Team -->
+                            <div class="mb-4">
+                                <p class="text-xs text-[#6B7280] mb-2">Assigned Team</p>
+                                <div class="space-y-1">
+                                    <!-- Frontend Developer -->
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#3B82F6] flex items-center justify-center">
+                                            <span class="text-white text-xs font-medium">FE</span>
+                                        </div>
+                                        <span class="text-xs text-[#6B7280]">
+                                            {{ project.frontend_developer || 'Not assigned' }}
+                                        </span>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-medium text-[#111827] truncate">
-                                            {{ project.frontend_developer?.name || 'Not assigned' }}
-                                        </p>
+                                    
+                                    <!-- Backend Developer -->
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#F97316] flex items-center justify-center">
+                                            <span class="text-white text-xs font-medium">BE</span>
+                                        </div>
+                                        <span class="text-xs text-[#6B7280]">
+                                            {{ project.backend_developer || 'Not assigned' }}
+                                        </span>
                                     </div>
-                                </div>
-
-                                <!-- Backend Developer -->
-                                <div class="flex items-center gap-2 p-1.5 bg-[#FFF7ED] rounded">
-                                    <div class="w-5 h-5 bg-[#F97316] rounded-full flex items-center justify-center flex-shrink-0">
-                                        <span class="text-white text-xs font-bold">BE</span>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-medium text-[#111827] truncate">
-                                            {{ project.backend_developer?.name || 'Not assigned' }}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- Server Admin -->
-                                <div class="flex items-center gap-2 p-1.5 bg-[#F5F3FF] rounded">
-                                    <div class="w-5 h-5 bg-[#8B5CF6] rounded-full flex items-center justify-center flex-shrink-0">
-                                        <span class="text-white text-xs font-bold">SA</span>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-xs font-medium text-[#111827] truncate">
-                                            {{ project.server_admin?.name || 'Not assigned' }}
-                                        </p>
+                                    
+                                    <!-- Server Admin -->
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-[#8B5CF6] flex items-center justify-center">
+                                            <span class="text-white text-xs font-medium">SA</span>
+                                        </div>
+                                        <span class="text-xs text-[#6B7280]">
+                                            {{ project.server_admin || 'Not assigned' }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Tasks Count -->
-                        <div class="mb-3 pb-2 border-b border-[#E5E7EB]">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs text-[#6B7280]">Total Tasks</span>
-                                <span class="text-sm font-bold text-[#111827]">{{ project.tasks_count }}</span>
+                            <!-- Project Stats -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div>
+                                    <p class="text-xs text-[#6B7280]">Total Tasks</p>
+                                    <p class="text-lg font-semibold text-[#111827]">{{ project.total_tasks }}</p>
+                                </div>
+                                <div v-if="project.total_tasks > 0" class="text-right">
+                                    <p class="text-xs text-[#6B7280]">Progress</p>
+                                    <p class="text-lg font-semibold text-[#111827]">{{ project.overall_progress }}%</p>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="flex gap-2">
+                                <button 
+                                    @click="openEditModal(project)"
+                                    class="flex-1 px-3 py-2 bg-[#3B82F6] text-white rounded text-xs font-medium hover:bg-[#2563EB]"
+                                >
+                                    Edit
+                                </button>
+                                <button 
+                                    @click="archiveProject(project)"
+                                    :class="{
+                                        'bg-[#F97316] hover:bg-[#EA580C]': project.status === 'active',
+                                        'bg-[#10B981] hover:bg-[#059669]': project.status === 'inactive'
+                                    }"
+                                    class="flex-1 px-3 py-2 text-white rounded text-xs font-medium"
+                                >
+                                    {{ project.status === 'active' ? 'Archive' : 'Activate' }}
+                                </button>
+                                <button 
+                                    @click="openDeleteModal(project)"
+                                    class="px-3 py-2 bg-[#EF4444] text-white rounded text-xs font-medium hover:bg-[#DC2626]"
+                                >
+                                    Delete
+                                </button>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Actions -->
-                        <div class="flex gap-1">
-                            <button
-                                @click="openEditModal(project)"
-                                class="flex-1 px-2 py-1.5 bg-[#3B82F6] text-white rounded hover:bg-[#2563EB] transition-colors text-xs font-medium"
-                            >
-                                Edit
-                            </button>
-                            <button 
-                                v-if="project.status === 'active'"
-                                @click="archiveProject(project)" 
-                                class="flex-1 px-2 py-1.5 bg-[#F59E0B] text-white rounded hover:bg-[#D97706] transition-colors text-xs font-medium"
-                            >
-                                Archive
-                            </button>
-                            <button 
-                                v-else
-                                @click="activateProject(project)" 
-                                class="flex-1 px-2 py-1.5 bg-[#10B981] text-white rounded hover:bg-[#059669] transition-colors text-xs font-medium"
-                            >
-                                Activate
-                            </button>
-                            <button 
-                                @click="openDeleteModal(project)" 
-                                class="px-2 py-1.5 bg-[#EF4444] text-white rounded hover:bg-[#DC2626] transition-colors text-xs font-medium"
-                            >
-                                Delete
-                            </button>
-                        </div>
+                    <!-- Empty State -->
+                    <div v-else class="text-center py-12">
+                        <h3 class="text-sm font-medium text-[#111827] mb-2">No projects yet</h3>
+                        <p class="text-xs text-[#6B7280] mb-4">Get started by creating your first project</p>
+                        <Link 
+                            href="/admin/projects/create" 
+                            class="px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] text-sm font-medium"
+                        >
+                            Create Project
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -356,7 +331,7 @@ function handleStatusFilter() {
                         </p>
                         <ul class="text-xs text-[#991B1B] mt-2 ml-4 list-disc">
                             <li>The project and all its data</li>
-                            <li>All associated tasks ({{ selectedProject?.tasks_count || 0 }} tasks)</li>
+                            <li>All associated tasks ({{ selectedProject?.total_tasks || 0 }} tasks)</li>
                             <li>Customer and developer assignments</li>
                         </ul>
                     </div>

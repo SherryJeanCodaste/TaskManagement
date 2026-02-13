@@ -6,6 +6,7 @@ import AppSidebar from '@/components/AppSidebar.vue';
 import CustomerSidebar from '@/components/CustomerSidebar.vue';
 import DeveloperSidebar from '@/components/DeveloperSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
+import NotificationToast from '@/components/NotificationToast.vue';
 import type { BreadcrumbItem } from '@/types';
 
 type Props = {
@@ -40,5 +41,8 @@ const userRole = page.props.auth.user?.role || 'customer';
             </AppSidebarHeader>
             <slot />
         </AppContent>
+        
+        <!-- Global Notification Toast -->
+        <NotificationToast />
     </AppShell>
 </template>

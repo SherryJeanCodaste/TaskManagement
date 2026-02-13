@@ -18,11 +18,12 @@ const developer = {
     role: user?.developer_type ? `${user.developer_type.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())} Developer` : 'Developer',
 };
 
+// Stats should come from backend props - using empty object for now
 const stats = {
-    assigned: 5,
-    inProgress: 2,
-    underReview: 1,
-    completed: 12,
+    assigned: 0,
+    inProgress: 0,
+    underReview: 0,
+    completed: 0,
 };
 
 const viewedTasks = ref<number[]>([]);
@@ -35,12 +36,8 @@ onMounted(() => {
     }
 });
 
-const recentTasksData = [
-    { id: 1, title: 'Mobile App Dashboard UI', category: 'UI/UX Design', date: '2026-02-11', status: 'assigned', priority: 'high', project: 'Fitness App' },
-    { id: 2, title: 'API Integration', category: 'Backend', date: '2026-02-11', status: 'assigned', priority: 'high', project: 'E-commerce Platform' },
-    { id: 3, title: 'E-commerce Checkout Flow', category: 'UI/UX Design', date: '2026-01-29', status: 'review', priority: 'medium', project: 'Online Store' },
-    { id: 4, title: 'Social Media Banner Pack', category: 'Graphic Design', date: '2026-02-03', status: 'in-progress', priority: 'medium', project: 'Marketing Campaign' },
-];
+// No sample data - using real backend data from props
+const recentTasksData = [];
 
 const recentTasks = computed(() => {
     return recentTasksData.map(task => ({

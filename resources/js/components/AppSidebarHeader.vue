@@ -81,7 +81,7 @@ const fetchNotifications = async () => {
 
 const fetchUnreadCount = async () => {
     try {
-        const response = await axios.get('/api/notifications/unread-count');
+        const response = await axios.get('/notifications/unread-count');
         notificationCount.value = response.data.count;
     } catch (error) {
         console.error('Error fetching unread count:', error);
@@ -177,6 +177,28 @@ onUnmounted(() => {
         
         <!-- Right side header actions -->
         <div class="flex items-center gap-4">
+            <!-- Quick Action Buttons (Admin only) -->
+            <div v-if="userRole === 'admin'" class="flex items-center gap-2">
+                <a 
+                    href="/users/employee/create"
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-[#06B6D4] text-white rounded-lg hover:bg-[#0891B2] transition-colors font-semibold text-xs"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Add Employee</span>
+                </a>
+                <a 
+                    href="/users/customer/create"
+                    class="flex items-center gap-1.5 px-3 py-1.5 bg-[#22C55E] text-white rounded-lg hover:bg-[#16A34A] transition-colors font-semibold text-xs"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Add Customer</span>
+                </a>
+            </div>
+            
             <!-- Custom actions slot -->
             <slot name="actions" />
             

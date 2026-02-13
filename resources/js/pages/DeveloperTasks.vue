@@ -4,32 +4,47 @@ import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 
+interface Task {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+    priority: string;
+    status: string;
+    created_at: string;
+    project?: {
+        id: number;
+        name: string;
+    };
+}
+
+interface Props {
+    tasks: Task[];
+    filters: {
+        status: string;
+        category: string;
+        priority: string;
+    };
+}
+
+const props = defineProps<Props>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Dashboard', href: '/developer/dashboard' },
     { title: 'My Tasks', href: '/developer/tasks' },
 ];
 
-const statusFilter = ref('all');
-const categoryFilter = ref('all');
-const priorityFilter = ref('all');
-
-// Mock data - all tasks
-const allTasks = [
-    { id: 1, title: 'Company Logo Redesign', description: 'We need a modern refresh of our company logo. The current logo feels dated. We\'d like something...', category: 'Graphic Design', priority: 'high', status: 'completed', date: '2026-01-15' },
-    { id: 2, title: 'Mobile App Dashboard UI', description: 'Design the main dashboard screen for our fitness tracking mobile app. It should show daily steps,...', category: 'UI/UX Design', priority: 'high', status: 'in_progress', date: '2026-01-28' },
-    { id: 3, title: 'Social Media Banner Pack', description: 'Create a set of 5 social media banners for our upcoming product launch. Sizes needed: Instagra...', category: 'Graphic Design', priority: 'medium', status: 'assigned', date: '2026-02-03' },
-    { id: 4, title: 'E-commerce Checkout Flow', description: 'Design the complete checkout flow for our online store. Include cart review, shipping details...', category: 'UI/UX Design', priority: 'medium', status: 'review', date: '2026-01-20' },
-    { id: 5, title: 'Event Invitation Card', description: 'Design an elegant digital invitation card for our annual company gala. Should include event detail...', category: 'Graphic Design', priority: 'low', status: 'pending', date: '2026-02-08' },
-    { id: 6, title: 'Landing Page Redesign', description: 'Redesign our SaaS product landing page. Focus on clear value proposition, feature highlights...', category: 'UI/UX Design', priority: 'high', status: 'completed', date: '2026-01-10' },
-];
+const statusFilter = ref(props.filters.status);
+const categoryFilter = ref(props.filters.category);
+const priorityFilter = ref(props.filters.priority);
 
 const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
         'completed': 'bg-[#D1FAE5] text-[#065F46]',
-        'in_progress': 'bg-[#FFEDD5] text-[#9A3412]',
-        'assigned': 'bg-[#FEF3C7] text-[#92400E]',
-        'review': 'bg-[#DBEAFE] text-[#1E40AF]',
-        'pending': 'bg-[#E0E7FF] text-[#4338CA]',
+        'in-progress': 'bg-[#FFEDD5] text-[#9A3412]',
+        'assigned': 'bg-[#DBEAFE] text-[#1E40AF]',
+        'review': 'bg-[#E0E7FF] text-[#4338CA]',
+        'pending': 'bg-[#DBEAFE] text-[#1E40AF]',
     };
     return colors[status] || 'bg-[#F3F4F6] text-[#374151]';
 };
@@ -37,10 +52,10 @@ const getStatusColor = (status: string) => {
 const getStatusLabel = (status: string) => {
     const labels: Record<string, string> = {
         'completed': 'Completed',
-        'in_progress': 'In Progress',
+        'in-progress': 'In Progress',
         'assigned': 'Assigned',
-        'review': 'Review',
-        'pending': 'Pending',
+        'review': 'For Review',
+        'pending': 'Assigned',
     };
     return labels[status] || status;
 };
@@ -56,10 +71,9 @@ const getPriorityColor = (priority: string) => {
 
 const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-        'UI/UX Design': 'bg-[#DBEAFE] text-[#1E40AF]',
-        'Graphic Design': 'bg-[#E0E7FF] text-[#4338CA]',
-        'Backend': 'bg-[#FFEDD5] text-[#9A3412]',
-        'Frontend': 'bg-[#D1FAE5] text-[#065F46]',
+        'frontend': 'bg-[#D1FAE5] text-[#065F46]',
+        'backend': 'bg-[#FFEDD5] text-[#9A3412]',
+        'server': 'bg-[#E0E7FF] text-[#4338CA]',
     };
     return colors[category] || 'bg-[#F3F4F6] text-[#374151]';
 };
@@ -83,10 +97,9 @@ const getCategoryColor = (category: string) => {
                         class="px-3 py-2 border border-[#E5E7EB] rounded-lg text-sm text-[#111827] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6]"
                     >
                         <option value="all">All Statuses</option>
-                        <option value="pending">Pending</option>
                         <option value="assigned">Assigned</option>
                         <option value="in_progress">In Progress</option>
-                        <option value="review">Review</option>
+                        <option value="review">For Review</option>
                         <option value="completed">Completed</option>
                     </select>
 
@@ -113,9 +126,13 @@ const getCategoryColor = (category: string) => {
                 </div>
 
                 <!-- Tasks Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div v-if="tasks.length === 0" class="text-center py-12">
+                    <p class="text-[#6B7280]">No tasks assigned yet.</p>
+                </div>
+
+                <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Link
-                        v-for="task in allTasks"
+                        v-for="task in tasks"
                         :key="task.id"
                         :href="`/developer/tasks/${task.id}`"
                         class="block bg-white rounded-lg border border-[#E5E7EB] p-4 hover:shadow-md transition-shadow"
@@ -140,7 +157,7 @@ const getCategoryColor = (category: string) => {
                         <div class="flex items-center gap-2 mb-3">
                             <span 
                                 :class="getCategoryColor(task.category)"
-                                class="px-2 py-1 rounded text-xs font-medium"
+                                class="px-2 py-1 rounded text-xs font-medium capitalize"
                             >
                                 {{ task.category }}
                             </span>
@@ -152,9 +169,9 @@ const getCategoryColor = (category: string) => {
                             </span>
                         </div>
 
-                        <!-- Date -->
+                        <!-- Project -->
                         <div class="text-xs text-[#6B7280]">
-                            {{ task.date }}
+                            {{ task.project?.name || 'No project' }}
                         </div>
                     </Link>
                 </div>
