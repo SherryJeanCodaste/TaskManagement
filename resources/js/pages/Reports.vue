@@ -46,26 +46,62 @@ const employeePerformance = [
             </div>
 
             <!-- Overview Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Overall Completion Rate</p>
-                    <p class="text-3xl font-bold text-[#22C55E] mt-2">74%</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">26/35 tasks completed</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Overall Completion Rate</p>
+                            <p class="text-2xl font-bold text-[#22C55E] mt-1">74%</p>
+                            <p class="text-xs text-[#1E293B]/60 mt-1">26/35 tasks completed</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#22C55E]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#22C55E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Average Efficiency</p>
-                    <p class="text-3xl font-bold text-[#06B6D4] mt-2">86%</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">Across all employees</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Average Efficiency</p>
+                            <p class="text-2xl font-bold text-[#06B6D4] mt-1">86%</p>
+                            <p class="text-xs text-[#1E293B]/60 mt-1">Across all employees</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#06B6D4]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#06B6D4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Active Projects</p>
-                    <p class="text-3xl font-bold text-[#5B21B6] mt-2">2</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">1 completed</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Active Projects</p>
+                            <p class="text-2xl font-bold text-[#5B21B6] mt-1">2</p>
+                            <p class="text-xs text-[#1E293B]/60 mt-1">1 completed</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#5B21B6]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#5B21B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Tasks This Month</p>
-                    <p class="text-3xl font-bold text-[#F97316] mt-2">35</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">+12 from last month</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Tasks This Month</p>
+                            <p class="text-2xl font-bold text-[#F97316] mt-1">35</p>
+                            <p class="text-xs text-[#1E293B]/60 mt-1">+12 from last month</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#F97316]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#F97316]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -99,15 +99,15 @@ const clearFilters = () => {
     <Head title="Tasks" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6 bg-[#F9FAFB]">
+        <div class="flex h-full flex-1 flex-col gap-4 p-4 bg-[#F9FAFB]">
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-[#1E293B]">Tasks</h1>
-                    <p class="text-[#1E293B] mt-1">Manage your tasks</p>
+                    <h1 class="text-2xl font-bold text-[#1E293B]">Tasks</h1>
+                    <p class="text-[#1E293B] mt-1 text-sm">Manage your tasks</p>
                 </div>
-                <a v-if="props.isCustomer" :href="'/tasks/create'" class="flex items-center gap-2 px-6 py-3 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a v-if="props.isCustomer" :href="'/tasks/create'" class="flex items-center gap-2 px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                     </svg>
                     Create New Task
@@ -115,30 +115,66 @@ const clearFilters = () => {
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Total Tasks</p>
-                    <p class="text-3xl font-bold text-[#5B21B6] mt-2">{{ stats.total }}</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Total Tasks</p>
+                            <p class="text-2xl font-bold text-[#5B21B6] mt-1">{{ stats.total }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#5B21B6]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#5B21B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Pending</p>
-                    <p class="text-3xl font-bold text-[#EF4444] mt-2">{{ stats.pending }}</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Pending</p>
+                            <p class="text-2xl font-bold text-[#EF4444] mt-1">{{ stats.pending }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#EF4444]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#EF4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">In Progress</p>
-                    <p class="text-3xl font-bold text-[#F97316] mt-2">{{ stats.inProgress }}</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">In Progress</p>
+                            <p class="text-2xl font-bold text-[#F97316] mt-1">{{ stats.inProgress }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#F97316]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#F97316]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Completed</p>
-                    <p class="text-3xl font-bold text-[#22C55E] mt-2">{{ stats.completed }}</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Completed</p>
+                            <p class="text-2xl font-bold text-[#22C55E] mt-1">{{ stats.completed }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#22C55E]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#22C55E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Filters -->
-            <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm p-6">
-                <div class="flex flex-wrap items-center gap-4">
+            <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm p-4">
+                <div class="flex flex-wrap items-center gap-3">
                     <div class="flex items-center gap-2">
-                        <svg class="w-5 h-5 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
                         </svg>
                         <span class="text-sm font-semibold text-[#1E293B]">Filters:</span>
@@ -146,10 +182,10 @@ const clearFilters = () => {
 
                     <!-- Project Filter -->
                     <div class="flex items-center gap-2">
-                        <label class="text-sm text-[#64748B]">Project:</label>
+                        <label class="text-xs text-[#64748B]">Project:</label>
                         <select 
                             v-model="projectFilter"
-                            class="px-3 py-2 border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
+                            class="px-2 py-1 border border-[#CBD5E1] rounded-lg text-xs text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
                         >
                             <option value="all">All Projects</option>
                             <option v-for="project in props.projects" :key="project.id" :value="project.id">
@@ -160,10 +196,10 @@ const clearFilters = () => {
 
                     <!-- Category Filter (only for customers) -->
                     <div v-if="props.isCustomer" class="flex items-center gap-2">
-                        <label class="text-sm text-[#64748B]">Category:</label>
+                        <label class="text-xs text-[#64748B]">Category:</label>
                         <select 
                             v-model="categoryFilter"
-                            class="px-3 py-2 border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
+                            class="px-2 py-1 border border-[#CBD5E1] rounded-lg text-xs text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
                         >
                             <option value="all">All Categories</option>
                             <option value="frontend">Frontend</option>
@@ -174,10 +210,10 @@ const clearFilters = () => {
 
                     <!-- Status Filter -->
                     <div class="flex items-center gap-2">
-                        <label class="text-sm text-[#64748B]">Status:</label>
+                        <label class="text-xs text-[#64748B]">Status:</label>
                         <select 
                             v-model="statusFilter"
-                            class="px-3 py-2 border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
+                            class="px-2 py-1 border border-[#CBD5E1] rounded-lg text-xs text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
                         >
                             <option value="all">All Status</option>
                             <option value="pending">Pending</option>
@@ -188,10 +224,10 @@ const clearFilters = () => {
 
                     <!-- Date Filter -->
                     <div class="flex items-center gap-2">
-                        <label class="text-sm text-[#64748B]">Date:</label>
+                        <label class="text-xs text-[#64748B]">Date:</label>
                         <select 
                             v-model="dateFilter"
-                            class="px-3 py-2 border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
+                            class="px-2 py-1 border border-[#CBD5E1] rounded-lg text-xs text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
                         >
                             <option value="all">All Time</option>
                             <option value="today">Today</option>
@@ -204,13 +240,13 @@ const clearFilters = () => {
                     <button
                         v-if="projectFilter !== 'all' || categoryFilter !== 'all' || statusFilter !== 'all' || dateFilter !== 'all'"
                         @click="clearFilters"
-                        class="ml-auto px-4 py-2 text-sm text-[#EF4444] hover:bg-[#EF4444]/10 rounded-lg transition-colors font-medium"
+                        class="ml-auto px-3 py-1 text-xs text-[#EF4444] hover:bg-[#EF4444]/10 rounded-lg transition-colors font-medium"
                     >
                         Clear Filters
                     </button>
 
                     <!-- Results Count -->
-                    <div class="ml-auto text-sm text-[#64748B]">
+                    <div class="ml-auto text-xs text-[#64748B]">
                         Showing {{ filteredTasks.length }} of {{ props.tasks.length }} tasks
                     </div>
                 </div>
@@ -218,40 +254,40 @@ const clearFilters = () => {
 
             <!-- Tasks Table -->
             <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm overflow-hidden">
-                <div class="p-6 border-b border-[#CBD5E1]">
-                    <h2 class="text-xl font-bold text-[#1E293B]">All Tasks</h2>
+                <div class="p-4 border-b border-[#CBD5E1]">
+                    <h2 class="text-lg font-bold text-[#1E293B]">All Tasks</h2>
                 </div>
                 <div v-if="filteredTasks.length > 0" class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-[#F9FAFB] border-b border-[#CBD5E1]">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Task</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Project</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Category</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Created</th>
-                                <th v-if="props.isCustomer" class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
+                                <th class="px-4 py-2 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Task</th>
+                                <th class="px-4 py-2 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Project</th>
+                                <th class="px-4 py-2 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Category</th>
+                                <th class="px-4 py-2 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-2 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Created</th>
+                                <th v-if="props.isCustomer" class="px-4 py-2 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#CBD5E1]">
                             <tr v-for="task in filteredTasks" :key="task.id" @click="router.visit(`/tasks/${task.id}`)" class="hover:bg-[#F9FAFB] transition-colors cursor-pointer">
-                                <td class="px-6 py-4">
-                                    <div class="font-semibold text-[#1E293B]">{{ task.title }}</div>
+                                <td class="px-4 py-3">
+                                    <div class="font-semibold text-[#1E293B] text-sm">{{ task.title }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-[#1E293B]">{{ task.project?.name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-4 py-3 whitespace-nowrap text-[#1E293B] text-sm">{{ task.project?.name }}</td>
+                                <td class="px-4 py-3 whitespace-nowrap">
                                     <span 
                                         :class="{
                                             'bg-[#5B21B6]/10 text-[#5B21B6]': task.category === 'frontend',
                                             'bg-[#06B6D4]/10 text-[#06B6D4]': task.category === 'backend',
                                             'bg-[#F97316]/10 text-[#F97316]': task.category === 'server'
                                         }"
-                                        class="px-3 py-1 rounded-full text-sm font-semibold capitalize"
+                                        class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
                                     >
                                         {{ task.category }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap" @click.stop>
+                                <td class="px-4 py-3 whitespace-nowrap" @click.stop>
                                     <!-- Developers can update status via dropdown -->
                                     <select 
                                         v-if="!props.isCustomer"
@@ -262,7 +298,7 @@ const clearFilters = () => {
                                             'bg-[#F97316]/10 text-[#F97316]': task.status === 'in_progress',
                                             'bg-[#EF4444]/10 text-[#EF4444]': task.status === 'pending'
                                         }"
-                                        class="px-3 py-1 rounded-full text-sm font-semibold capitalize border-0 cursor-pointer"
+                                        class="px-2 py-1 rounded-full text-xs font-semibold capitalize border-0 cursor-pointer"
                                     >
                                         <option value="pending">Pending</option>
                                         <option value="in_progress">In Progress</option>
@@ -276,19 +312,19 @@ const clearFilters = () => {
                                             'bg-[#F97316]/10 text-[#F97316]': task.status === 'in_progress',
                                             'bg-[#EF4444]/10 text-[#EF4444]': task.status === 'pending'
                                         }"
-                                        class="px-3 py-1 rounded-full text-sm font-semibold capitalize"
+                                        class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
                                     >
                                         {{ task.status.replace('_', ' ') }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-[#1E293B]">{{ new Date(task.created_at).toLocaleDateString() }}</td>
-                                <td v-if="props.isCustomer" class="px-6 py-4 whitespace-nowrap" @click.stop>
+                                <td class="px-4 py-3 whitespace-nowrap text-[#1E293B] text-xs">{{ new Date(task.created_at).toLocaleDateString() }}</td>
+                                <td v-if="props.isCustomer" class="px-4 py-3 whitespace-nowrap" @click.stop>
                                     <button 
                                         @click="deleteTask(task.id)" 
-                                        class="p-2 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-lg transition-colors"
+                                        class="p-1 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-lg transition-colors"
                                         title="Delete task"
                                     >
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
                                     </button>
@@ -297,24 +333,24 @@ const clearFilters = () => {
                         </tbody>
                     </table>
                 </div>
-                <div v-else class="p-12 text-center">
-                    <svg class="w-16 h-16 mx-auto text-[#CBD5E1] mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div v-else class="p-8 text-center">
+                    <svg class="w-12 h-12 mx-auto text-[#CBD5E1] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
-                    <p class="text-[#1E293B]/60 mb-2">
+                    <p class="text-[#1E293B]/60 mb-2 text-sm">
                         {{ props.tasks.length === 0 ? 'No tasks yet. Create your first task!' : 'No tasks match your filters.' }}
                     </p>
                     <button 
                         v-if="props.tasks.length > 0 && filteredTasks.length === 0"
                         @click="clearFilters"
-                        class="text-[#5B21B6] hover:text-[#6D28D9] font-semibold"
+                        class="text-[#5B21B6] hover:text-[#6D28D9] font-semibold text-sm"
                     >
                         Clear Filters
                     </button>
                     <a 
                         v-else
                         :href="'/tasks/create'" 
-                        class="inline-block px-6 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold"
+                        class="inline-block px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold text-sm"
                     >
                         Create Task
                     </a>

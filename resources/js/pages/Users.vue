@@ -52,21 +52,48 @@ const customers = [
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Total Employees</p>
-                    <p class="text-3xl font-bold text-[#06B6D4] mt-2">{{ employees.length }}</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">{{ employees.filter(e => e.status === 'active').length }} active</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Total Employees</p>
+                            <p class="text-2xl font-bold text-[#06B6D4] mt-1">{{ employees.length }}</p>
+                            <p class="text-xs text-[#1E293B]/60 mt-1">{{ employees.filter(e => e.status === 'active').length }} active</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#06B6D4]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#06B6D4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Total Customers</p>
-                    <p class="text-3xl font-bold text-[#22C55E] mt-2">{{ customers.length }}</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">{{ customers.filter(c => c.status === 'active').length }} active</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Total Customers</p>
+                            <p class="text-2xl font-bold text-[#22C55E] mt-1">{{ customers.length }}</p>
+                            <p class="text-xs text-[#1E293B]/60 mt-1">{{ customers.filter(c => c.status === 'active').length }} active</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#22C55E]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#22C55E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
-                    <p class="text-sm text-[#1E293B] font-medium">Tasks Created</p>
-                    <p class="text-3xl font-bold text-[#F97316] mt-2">{{ customers.reduce((sum, c) => sum + c.tasksCreated, 0) }}</p>
-                    <p class="text-sm text-[#1E293B]/60 mt-1">By customers</p>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">Tasks Created</p>
+                            <p class="text-2xl font-bold text-[#F97316] mt-1">{{ customers.reduce((sum, c) => sum + c.tasksCreated, 0) }}</p>
+                            <p class="text-xs text-[#1E293B]/60 mt-1">By customers</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#F97316]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#F97316]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 

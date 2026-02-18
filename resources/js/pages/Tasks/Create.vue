@@ -205,18 +205,18 @@ onUnmounted(() => {
     <Head title="Create Task" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6 bg-[#F9FAFB]">
+        <div class="flex h-full flex-1 flex-col gap-4 p-4 bg-[#F9FAFB]">
             <!-- Header -->
             <div>
-                <h1 class="text-3xl font-bold text-[#1E293B]">Create New Tasks</h1>
-                <p class="text-[#1E293B] mt-1">Add tasks one by one, then review and submit all at once</p>
+                <h1 class="text-2xl font-bold text-[#1E293B]">Create New Tasks</h1>
+                <p class="text-[#1E293B] mt-1 text-sm">Add tasks one by one, then review and submit all at once</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <!-- Left: Task Form -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm p-8">
-                        <form @submit.prevent="addTask" class="space-y-6">
+                    <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm p-6">
+                        <form @submit.prevent="addTask" class="space-y-4">
                             <!-- Project Selection -->
                             <div class="relative project-dropdown-container">
                                 <label for="project" class="block text-sm font-semibold text-[#1E293B] mb-2">
@@ -224,11 +224,11 @@ onUnmounted(() => {
                                 </label>
                                 <div 
                                     @click="toggleProjectDropdown"
-                                    class="w-full px-4 py-3 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent text-[#1E293B] bg-white cursor-pointer flex items-center justify-between"
+                                    class="w-full px-3 py-2 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent text-[#1E293B] bg-white cursor-pointer flex items-center justify-between text-sm"
                                     :class="{ 'bg-gray-100 cursor-not-allowed': addedTasks.length > 0 }"
                                 >
                                     <span :class="{ 'text-[#94A3B8]': !form.project_id }">{{ getSelectedProjectName() }}</span>
-                                    <svg class="w-5 h-5 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                 </div>
@@ -236,9 +236,9 @@ onUnmounted(() => {
                                 <!-- Dropdown Menu -->
                                 <div v-if="showProjectDropdown" class="absolute z-10 w-full mt-1 bg-white border border-[#CBD5E1] rounded-lg shadow-lg max-h-80 overflow-hidden">
                                     <!-- Search Bar -->
-                                    <div class="p-3 border-b border-[#E2E8F0]">
+                                    <div class="p-2 border-b border-[#E2E8F0]">
                                         <div class="relative">
-                                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#94A3B8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#94A3B8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                                             </svg>
                                             <input
@@ -246,21 +246,21 @@ onUnmounted(() => {
                                                 @input="filterProjects"
                                                 type="text"
                                                 placeholder="Search projects..."
-                                                class="w-full pl-10 pr-4 py-2 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent text-sm text-[#1E293B] placeholder:text-[#94A3B8]"
+                                                class="w-full pl-8 pr-3 py-2 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent text-sm text-[#1E293B] placeholder:text-[#94A3B8]"
                                             />
                                         </div>
                                     </div>
                                     
                                     <!-- Project List -->
                                     <div class="max-h-60 overflow-y-auto">
-                                        <div v-if="filteredProjects.length === 0" class="px-4 py-3 text-sm text-[#94A3B8] text-center">
+                                        <div v-if="filteredProjects.length === 0" class="px-3 py-2 text-sm text-[#94A3B8] text-center">
                                             No projects found
                                         </div>
                                         <div
                                             v-for="project in filteredProjects"
                                             :key="project.id"
                                             @click="selectProject(project.id, project.name)"
-                                            class="px-4 py-3 hover:bg-[#F9FAFB] cursor-pointer transition-colors"
+                                            class="px-3 py-2 hover:bg-[#F9FAFB] cursor-pointer transition-colors"
                                             :class="{ 'bg-[#5B21B6]/10': form.project_id == project.id }"
                                         >
                                             <p class="text-sm font-medium text-[#1E293B]">{{ project.name }}</p>
@@ -283,7 +283,7 @@ onUnmounted(() => {
                                     type="text"
                                     required
                                     placeholder="Enter task"
-                                    class="w-full px-4 py-3 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent text-[#1E293B] bg-white placeholder:text-[#94A3B8]"
+                                    class="w-full px-3 py-2 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent text-[#1E293B] bg-white placeholder:text-[#94A3B8] text-sm"
                                 />
                             </div>
 
@@ -297,17 +297,17 @@ onUnmounted(() => {
                                     v-model="form.description"
                                     rows="3"
                                     placeholder="Enter task description (optional)"
-                                    class="w-full px-4 py-3 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent resize-none text-[#1E293B] bg-white placeholder:text-[#94A3B8]"
+                                    class="w-full px-3 py-2 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent resize-none text-[#1E293B] bg-white placeholder:text-[#94A3B8] text-sm"
                                 ></textarea>
                             </div>
 
                             <!-- Category Selection -->
                             <div>
-                                <label class="block text-sm font-semibold text-[#1E293B] mb-3">
+                                <label class="block text-sm font-semibold text-[#1E293B] mb-2">
                                     Category <span class="text-[#EF4444]">*</span>
                                 </label>
-                                <div class="grid grid-cols-3 gap-4">
-                                    <label class="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+                                <div class="grid grid-cols-3 gap-3">
+                                    <label class="relative flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all"
                                         :class="form.category === 'frontend' ? 'border-[#5B21B6] bg-[#5B21B6]/5' : 'border-[#CBD5E1] hover:border-[#5B21B6]/50'">
                                         <input
                                             type="radio"
@@ -317,16 +317,16 @@ onUnmounted(() => {
                                             required
                                         />
                                         <div class="text-center">
-                                            <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-[#5B21B6]/10 flex items-center justify-center">
-                                                <svg class="w-6 h-6 text-[#5B21B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div class="w-10 h-10 mx-auto mb-2 rounded-lg bg-[#5B21B6]/10 flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-[#5B21B6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                                 </svg>
                                             </div>
-                                            <span class="font-semibold text-[#1E293B]">Frontend</span>
+                                            <span class="font-semibold text-[#1E293B] text-sm">Frontend</span>
                                         </div>
                                     </label>
 
-                                    <label class="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+                                    <label class="relative flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all"
                                         :class="form.category === 'backend' ? 'border-[#06B6D4] bg-[#06B6D4]/5' : 'border-[#CBD5E1] hover:border-[#06B6D4]/50'">
                                         <input
                                             type="radio"
@@ -336,16 +336,16 @@ onUnmounted(() => {
                                             required
                                         />
                                         <div class="text-center">
-                                            <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-[#06B6D4]/10 flex items-center justify-center">
-                                                <svg class="w-6 h-6 text-[#06B6D4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div class="w-10 h-10 mx-auto mb-2 rounded-lg bg-[#06B6D4]/10 flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-[#06B6D4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
                                                 </svg>
                                             </div>
-                                            <span class="font-semibold text-[#1E293B]">Backend</span>
+                                            <span class="font-semibold text-[#1E293B] text-sm">Backend</span>
                                         </div>
                                     </label>
 
-                                    <label class="relative flex items-center justify-center p-4 border-2 rounded-lg cursor-pointer transition-all"
+                                    <label class="relative flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition-all"
                                         :class="form.category === 'server' ? 'border-[#F97316] bg-[#F97316]/5' : 'border-[#CBD5E1] hover:border-[#F97316]/50'">
                                         <input
                                             type="radio"
@@ -355,12 +355,12 @@ onUnmounted(() => {
                                             required
                                         />
                                         <div class="text-center">
-                                            <div class="w-12 h-12 mx-auto mb-2 rounded-lg bg-[#F97316]/10 flex items-center justify-center">
-                                                <svg class="w-6 h-6 text-[#F97316]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div class="w-10 h-10 mx-auto mb-2 rounded-lg bg-[#F97316]/10 flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-[#F97316]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
                                                 </svg>
                                             </div>
-                                            <span class="font-semibold text-[#1E293B]">Server</span>
+                                            <span class="font-semibold text-[#1E293B] text-sm">Server</span>
                                         </div>
                                     </label>
                                 </div>
@@ -369,7 +369,7 @@ onUnmounted(() => {
                             <!-- Add Task Button -->
                             <button
                                 type="submit"
-                                class="w-full px-6 py-3 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold"
+                                class="w-full px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold text-sm"
                             >
                                 + Add Task
                             </button>
@@ -379,7 +379,7 @@ onUnmounted(() => {
                                 <button
                                     type="button"
                                     @click="cancelTasks"
-                                    class="flex-1 px-6 py-3 border border-[#CBD5E1] text-[#1E293B] rounded-lg hover:bg-[#F9FAFB] transition-colors font-semibold text-center"
+                                    class="flex-1 px-4 py-2 border border-[#CBD5E1] text-[#1E293B] rounded-lg hover:bg-[#F9FAFB] transition-colors font-semibold text-center text-sm"
                                 >
                                     Cancel
                                 </button>
@@ -387,7 +387,7 @@ onUnmounted(() => {
                                     v-if="addedTasks.length > 0"
                                     type="button"
                                     @click="viewAllTasks"
-                                    class="flex-1 px-6 py-3 bg-[#1E293B] text-white rounded-lg hover:bg-[#334155] transition-colors font-semibold"
+                                    class="flex-1 px-4 py-2 bg-[#1E293B] text-white rounded-lg hover:bg-[#334155] transition-colors font-semibold text-sm"
                                 >
                                     Create Tasks
                                 </button>
@@ -398,19 +398,19 @@ onUnmounted(() => {
 
                 <!-- Right: Added Tasks List -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm p-6 sticky top-6">
-                        <h2 class="text-lg font-bold text-[#1E293B] mb-4">Added Tasks ({{ addedTasks.length }})</h2>
+                    <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm p-4 sticky top-6">
+                        <h2 class="text-base font-bold text-[#1E293B] mb-3">Added Tasks ({{ addedTasks.length }})</h2>
                         
-                        <div v-if="addedTasks.length === 0" class="text-center py-8 text-[#94A3B8]">
-                            <svg class="w-16 h-16 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div v-if="addedTasks.length === 0" class="text-center py-6 text-[#94A3B8]">
+                            <svg class="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                             <p class="text-sm">No tasks added yet</p>
                         </div>
 
-                        <div v-else class="space-y-2 mb-4 max-h-96 overflow-y-auto">
+                        <div v-else class="space-y-2 mb-3 max-h-96 overflow-y-auto">
                             <div v-for="task in addedTasks" :key="task.id" 
-                                class="flex items-start justify-between p-3 bg-[#F9FAFB] rounded-lg border border-[#E2E8F0] hover:border-[#5B21B6]/30 transition-colors">
+                                class="flex items-start justify-between p-2 bg-[#F9FAFB] rounded-lg border border-[#E2E8F0] hover:border-[#5B21B6]/30 transition-colors">
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-semibold text-[#1E293B] truncate">{{ task.title }}</p>
                                     <span class="inline-block mt-1 px-2 py-0.5 text-xs rounded-full"
@@ -422,22 +422,22 @@ onUnmounted(() => {
                                         {{ task.category }}
                                     </span>
                                 </div>
-                                <div class="flex items-center gap-2 ml-2">
+                                <div class="flex items-center gap-1 ml-2">
                                     <button
                                         @click="editTask(task.id)"
-                                        class="text-[#5B21B6] hover:text-[#6D28D9] transition-colors"
+                                        class="text-[#5B21B6] hover:text-[#6D28D9] transition-colors p-1"
                                         title="Edit task"
                                     >
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </button>
                                     <button
                                         @click="removeTask(task.id)"
-                                        class="text-[#EF4444] hover:text-[#DC2626] transition-colors"
+                                        class="text-[#EF4444] hover:text-[#DC2626] transition-colors p-1"
                                         title="Remove task"
                                     >
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </button>
@@ -448,7 +448,7 @@ onUnmounted(() => {
                         <button
                             v-if="addedTasks.length > 0"
                             @click="viewAllTasks"
-                            class="w-full px-6 py-3 bg-[#1E293B] text-white rounded-lg hover:bg-[#334155] transition-colors font-semibold"
+                            class="w-full px-4 py-2 bg-[#1E293B] text-white rounded-lg hover:bg-[#334155] transition-colors font-semibold text-sm"
                         >
                             View All Tasks →
                         </button>
