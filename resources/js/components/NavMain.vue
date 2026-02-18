@@ -26,7 +26,7 @@ const { isCurrentUrl } = useCurrentUrl();
                     as-child
                     :is-active="isCurrentUrl(item.href)"
                     :tooltip="item.title"
-                    class="text-[#1E293B] hover:bg-[#F9FAFB] hover:text-[#5B21B6] data-[active=true]:bg-[#5B21B6] data-[active=true]:text-white"
+                    class="!text-[#1E293B] hover:bg-[#F9FAFB] hover:!text-[#5B21B6] data-[active=true]:bg-[#5B21B6] data-[active=true]:!text-white"
                 >
                     <Link :href="item.href">
                         <component :is="item.icon" />

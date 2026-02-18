@@ -1,35 +1,47 @@
 <script setup lang="ts">
-import { Head, router, Link } from '@inertiajs/vue3';
+import { Head, router, usePage, useForm } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface Props {
-    tasks: any[];
-    projects: any[];
-    isCustomer: boolean;
+    project: any;
 }
 
 const props = defineProps<Props>();
+const page = usePage();
+const user = computed(() => page.props.auth?.user);
+const isCustomer = computed(() => user.value?.role === 'customer');
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Tasks', href: '/tasks' },
+    { title: 'Projects', href: '/projects' },
+    { title: props.project.name, href: `/projects/${props.project.id}` },
 ];
 
+// Edit project modal
+const showEditModal = ref(false);
+const editForm = useForm({
+    name: props.project.name,
+    description: props.project.description || '',
+});
+
+const updateProject = () => {
+    editForm.put(`/projects/${props.project.id}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            showEditModal.value = false;
+        },
+    });
+};
+
 // Filters
-const projectFilter = ref('all');
 const categoryFilter = ref('all');
 const statusFilter = ref('all');
 const dateFilter = ref('all');
 
 // Filtered tasks
 const filteredTasks = computed(() => {
-    let filtered = [...props.tasks];
-
-    // Project filter
-    if (projectFilter.value !== 'all') {
-        filtered = filtered.filter(t => t.project_id == projectFilter.value);
-    }
+    let filtered = [...(props.project.tasks || [])];
 
     // Category filter
     if (categoryFilter.value !== 'all') {
@@ -68,13 +80,6 @@ const filteredTasks = computed(() => {
     return filtered;
 });
 
-const stats = computed(() => ({
-    total: filteredTasks.value.length,
-    pending: filteredTasks.value.filter(t => t.status === 'pending').length,
-    inProgress: filteredTasks.value.filter(t => t.status === 'in_progress').length,
-    completed: filteredTasks.value.filter(t => t.status === 'completed').length,
-}));
-
 const updateTaskStatus = (taskId: number, status: string) => {
     router.put(`/tasks/${taskId}`, { status }, {
         preserveScroll: true,
@@ -83,12 +88,22 @@ const updateTaskStatus = (taskId: number, status: string) => {
 
 const deleteTask = (taskId: number) => {
     if (confirm('Are you sure you want to delete this task?')) {
-        router.delete(`/tasks/${taskId}`);
+        router.delete(`/tasks/${taskId}`, {
+            preserveScroll: true,
+        });
     }
 };
 
+const stats = computed(() => {
+    return {
+        total: filteredTasks.value.length,
+        pending: filteredTasks.value.filter(t => t.status === 'pending').length,
+        in_progress: filteredTasks.value.filter(t => t.status === 'in_progress').length,
+        completed: filteredTasks.value.filter(t => t.status === 'completed').length,
+    };
+});
+
 const clearFilters = () => {
-    projectFilter.value = 'all';
     categoryFilter.value = 'all';
     statusFilter.value = 'all';
     dateFilter.value = 'all';
@@ -96,22 +111,30 @@ const clearFilters = () => {
 </script>
 
 <template>
-    <Head title="Tasks" />
+    <Head :title="project.name" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-6 p-6 bg-[#F9FAFB]">
             <!-- Header -->
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold text-[#1E293B]">Tasks</h1>
-                    <p class="text-[#1E293B] mt-1">Manage your tasks</p>
+                    <h1 class="text-3xl font-bold text-[#1E293B]">{{ project.name }}</h1>
+                    <p class="text-[#1E293B] mt-1">{{ project.description || 'No description' }}</p>
                 </div>
-                <a v-if="props.isCustomer" :href="'/tasks/create'" class="flex items-center gap-2 px-6 py-3 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                    </svg>
-                    Create New Task
-                </a>
+                <div class="flex items-center gap-3">
+                    <button v-if="isCustomer" @click="showEditModal = true" class="flex items-center gap-2 px-6 py-3 border border-[#5B21B6] text-[#5B21B6] rounded-lg hover:bg-[#5B21B6]/10 transition-colors font-semibold">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Edit Project
+                    </button>
+                    <a v-if="isCustomer" :href="`/tasks/create?project=${project.id}`" class="flex items-center gap-2 px-6 py-3 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Create New Task
+                    </a>
+                </div>
             </div>
 
             <!-- Stats Cards -->
@@ -126,7 +149,7 @@ const clearFilters = () => {
                 </div>
                 <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
                     <p class="text-sm text-[#1E293B] font-medium">In Progress</p>
-                    <p class="text-3xl font-bold text-[#F97316] mt-2">{{ stats.inProgress }}</p>
+                    <p class="text-3xl font-bold text-[#F97316] mt-2">{{ stats.in_progress }}</p>
                 </div>
                 <div class="bg-white rounded-xl p-6 border border-[#CBD5E1] shadow-sm">
                     <p class="text-sm text-[#1E293B] font-medium">Completed</p>
@@ -144,22 +167,8 @@ const clearFilters = () => {
                         <span class="text-sm font-semibold text-[#1E293B]">Filters:</span>
                     </div>
 
-                    <!-- Project Filter -->
-                    <div class="flex items-center gap-2">
-                        <label class="text-sm text-[#64748B]">Project:</label>
-                        <select 
-                            v-model="projectFilter"
-                            class="px-3 py-2 border border-[#CBD5E1] rounded-lg text-sm text-[#1E293B] bg-white focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent"
-                        >
-                            <option value="all">All Projects</option>
-                            <option v-for="project in props.projects" :key="project.id" :value="project.id">
-                                {{ project.name }}
-                            </option>
-                        </select>
-                    </div>
-
                     <!-- Category Filter (only for customers) -->
-                    <div v-if="props.isCustomer" class="flex items-center gap-2">
+                    <div v-if="isCustomer" class="flex items-center gap-2">
                         <label class="text-sm text-[#64748B]">Category:</label>
                         <select 
                             v-model="categoryFilter"
@@ -202,7 +211,7 @@ const clearFilters = () => {
 
                     <!-- Clear Filters -->
                     <button
-                        v-if="projectFilter !== 'all' || categoryFilter !== 'all' || statusFilter !== 'all' || dateFilter !== 'all'"
+                        v-if="categoryFilter !== 'all' || statusFilter !== 'all' || dateFilter !== 'all'"
                         @click="clearFilters"
                         class="ml-auto px-4 py-2 text-sm text-[#EF4444] hover:bg-[#EF4444]/10 rounded-lg transition-colors font-medium"
                     >
@@ -211,7 +220,7 @@ const clearFilters = () => {
 
                     <!-- Results Count -->
                     <div class="ml-auto text-sm text-[#64748B]">
-                        Showing {{ filteredTasks.length }} of {{ props.tasks.length }} tasks
+                        Showing {{ filteredTasks.length }} of {{ project.tasks?.length || 0 }} tasks
                     </div>
                 </div>
             </div>
@@ -219,18 +228,17 @@ const clearFilters = () => {
             <!-- Tasks Table -->
             <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm overflow-hidden">
                 <div class="p-6 border-b border-[#CBD5E1]">
-                    <h2 class="text-xl font-bold text-[#1E293B]">All Tasks</h2>
+                    <h2 class="text-xl font-bold text-[#1E293B]">{{ isCustomer ? 'Your Tasks' : 'All Tasks' }}</h2>
                 </div>
                 <div v-if="filteredTasks.length > 0" class="overflow-x-auto">
                     <table class="w-full">
                         <thead class="bg-[#F9FAFB] border-b border-[#CBD5E1]">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Task</th>
-                                <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Project</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Category</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Created</th>
-                                <th v-if="props.isCustomer" class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
+                                <th v-if="isCustomer" class="px-6 py-3 text-left text-xs font-semibold text-[#1E293B] uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#CBD5E1]">
@@ -238,7 +246,6 @@ const clearFilters = () => {
                                 <td class="px-6 py-4">
                                     <div class="font-semibold text-[#1E293B]">{{ task.title }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-[#1E293B]">{{ task.project?.name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span 
                                         :class="{
@@ -252,9 +259,8 @@ const clearFilters = () => {
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap" @click.stop>
-                                    <!-- Developers can update status via dropdown -->
                                     <select 
-                                        v-if="!props.isCustomer"
+                                        v-if="!isCustomer && task.assigned_to"
                                         :value="task.status"
                                         @change="updateTaskStatus(task.id, ($event.target as HTMLSelectElement).value)"
                                         :class="{
@@ -268,7 +274,6 @@ const clearFilters = () => {
                                         <option value="in_progress">In Progress</option>
                                         <option value="completed">Completed</option>
                                     </select>
-                                    <!-- Customers only see status badge -->
                                     <span 
                                         v-else
                                         :class="{
@@ -282,7 +287,7 @@ const clearFilters = () => {
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-[#1E293B]">{{ new Date(task.created_at).toLocaleDateString() }}</td>
-                                <td v-if="props.isCustomer" class="px-6 py-4 whitespace-nowrap" @click.stop>
+                                <td v-if="isCustomer" class="px-6 py-4 whitespace-nowrap" @click.stop>
                                     <button 
                                         @click="deleteTask(task.id)" 
                                         class="p-2 text-[#EF4444] hover:bg-[#EF4444]/10 rounded-lg transition-colors"
@@ -302,22 +307,72 @@ const clearFilters = () => {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                     <p class="text-[#1E293B]/60 mb-2">
-                        {{ props.tasks.length === 0 ? 'No tasks yet. Create your first task!' : 'No tasks match your filters.' }}
+                        {{ (project.tasks?.length || 0) === 0 ? 'No tasks in this project yet.' : 'No tasks match your filters.' }}
                     </p>
                     <button 
-                        v-if="props.tasks.length > 0 && filteredTasks.length === 0"
+                        v-if="(project.tasks?.length || 0) > 0 && filteredTasks.length === 0"
                         @click="clearFilters"
                         class="text-[#5B21B6] hover:text-[#6D28D9] font-semibold"
                     >
                         Clear Filters
                     </button>
                     <a 
-                        v-else
+                        v-else-if="isCustomer"
                         :href="'/tasks/create'" 
                         class="inline-block px-6 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold"
                     >
                         Create Task
                     </a>
+                </div>
+            </div>
+
+            <!-- Edit Project Modal -->
+            <div v-if="showEditModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="showEditModal = false">
+                <div @click.stop class="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-xl">
+                    <h3 class="text-xl font-bold text-[#1E293B] mb-4">Edit Project</h3>
+                    <form @submit.prevent="updateProject" class="space-y-4">
+                        <div>
+                            <label for="edit-name" class="block text-sm font-semibold text-[#1E293B] mb-2">
+                                Project Name <span class="text-[#EF4444]">*</span>
+                            </label>
+                            <input
+                                id="edit-name"
+                                v-model="editForm.name"
+                                type="text"
+                                required
+                                class="w-full px-4 py-3 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent text-[#1E293B] bg-white"
+                            />
+                            <p v-if="editForm.errors.name" class="mt-1 text-sm text-[#EF4444]">{{ editForm.errors.name }}</p>
+                        </div>
+                        <div>
+                            <label for="edit-description" class="block text-sm font-semibold text-[#1E293B] mb-2">
+                                Description
+                            </label>
+                            <textarea
+                                id="edit-description"
+                                v-model="editForm.description"
+                                rows="3"
+                                class="w-full px-4 py-3 border border-[#CBD5E1] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5B21B6] focus:border-transparent resize-none text-[#1E293B] bg-white"
+                            ></textarea>
+                            <p v-if="editForm.errors.description" class="mt-1 text-sm text-[#EF4444]">{{ editForm.errors.description }}</p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-4">
+                            <button
+                                type="submit"
+                                :disabled="editForm.processing"
+                                class="flex-1 px-6 py-3 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold disabled:opacity-50"
+                            >
+                                {{ editForm.processing ? 'Saving...' : 'Save Changes' }}
+                            </button>
+                            <button
+                                type="button"
+                                @click="showEditModal = false"
+                                class="flex-1 px-6 py-3 border border-[#CBD5E1] text-[#1E293B] rounded-lg hover:bg-[#F9FAFB] transition-colors font-semibold"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

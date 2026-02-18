@@ -35,6 +35,82 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $notifications = [];
+        
+        if ($request->user()) {
+            $user = $request->user();
+            
+            if ($user->role === 'customer') {
+                // Customers see:
+                // 1. Unread comments from developers on their tasks
+                $comments = \App\Models\TaskComment::whereHas('task', function($query) use ($user) {
+                    $query->where('customer_id', $user->id);
+                })
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNull('read_at')
+                    ->with(['user', 'task'])
+                    ->latest()
+                    ->get()
+                    ->map(function($comment) {
+                        return [
+                            'id' => $comment->id,
+                            'type' => 'comment',
+                            'user' => $comment->user,
+                            'task_id' => $comment->task_id,
+                            'task' => $comment->task,
+                            'comment' => $comment->comment,
+                            'created_at' => $comment->created_at,
+                        ];
+                    });
+                
+                // 2. Unread work submissions (attachments) from developers
+                $attachments = \App\Models\TaskAttachment::whereHas('task', function($query) use ($user) {
+                    $query->where('customer_id', $user->id);
+                })
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNull('read_at')
+                    ->with(['user', 'task'])
+                    ->latest()
+                    ->get()
+                    ->map(function($attachment) {
+                        return [
+                            'id' => $attachment->id,
+                            'type' => 'attachment',
+                            'user' => $attachment->user,
+                            'task_id' => $attachment->task_id,
+                            'task' => $attachment->task,
+                            'attachment_type' => $attachment->type,
+                            'attachment_name' => $attachment->name,
+                            'created_at' => $attachment->created_at,
+                        ];
+                    });
+                
+                $notifications = $comments->concat($attachments)->sortByDesc('created_at')->take(10)->values();
+            } else {
+                // Developers see unread comments from customers on their assigned tasks
+                $notifications = \App\Models\TaskComment::whereHas('task', function($query) use ($user) {
+                    $query->where('assigned_to', $user->id);
+                })
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNull('read_at')
+                    ->with(['user', 'task'])
+                    ->latest()
+                    ->take(10)
+                    ->get()
+                    ->map(function($comment) {
+                        return [
+                            'id' => $comment->id,
+                            'type' => 'comment',
+                            'user' => $comment->user,
+                            'task_id' => $comment->task_id,
+                            'task' => $comment->task,
+                            'comment' => $comment->comment,
+                            'created_at' => $comment->created_at,
+                        ];
+                    });
+            }
+        }
+        
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -42,6 +118,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'notifications' => $notifications,
         ];
     }
 }

@@ -31,6 +31,25 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+        $this->configureAuthentication();
+    }
+
+    /**
+     * Configure authentication events.
+     */
+    private function configureAuthentication(): void
+    {
+        // Increment login count on successful login
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = \App\Models\User::where('email', $request->email)->first();
+
+            if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+                $user->increment('login_count');
+                return $user;
+            }
+
+            return null;
+        });
     }
 
     /**

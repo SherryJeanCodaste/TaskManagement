@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'profile_picture',
     ];
 
     /**
@@ -48,5 +50,32 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    // Relationships
+    public function createdTasks()
+    {
+        return $this->hasMany(Task::class, 'customer_id');
+    }
+
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    public function projectMemberships()
+    {
+        return $this->hasMany(ProjectMember::class);
+    }
+
+    // Helper methods
+    public function isCustomer()
+    {
+        return $this->role === 'customer';
+    }
+
+    public function isDeveloper()
+    {
+        return in_array($this->role, ['frontend_developer', 'backend_developer', 'server_administrator']);
     }
 }

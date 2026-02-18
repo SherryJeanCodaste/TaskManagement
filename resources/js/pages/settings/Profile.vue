@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { Form, Head, Link, usePage, router } from '@inertiajs/vue3';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser.vue';
 import Heading from '@/components/Heading.vue';
@@ -12,6 +12,7 @@ import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/profile';
 import { send } from '@/routes/verification';
 import { type BreadcrumbItem } from '@/types';
+import { ref } from 'vue';
 
 type Props = {
     mustVerifyEmail: boolean;
@@ -29,6 +30,33 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const page = usePage();
 const user = page.props.auth.user;
+
+const profilePicturePreview = ref<string | null>(null);
+const profilePictureInput = ref<HTMLInputElement | null>(null);
+
+const selectNewProfilePicture = () => {
+    profilePictureInput.value?.click();
+};
+
+const updateProfilePicturePreview = () => {
+    const file = profilePictureInput.value?.files?.[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            profilePicturePreview.value = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+const removeProfilePicture = () => {
+    router.delete('/settings/profile/picture', {
+        preserveScroll: true,
+        onSuccess: () => {
+            profilePicturePreview.value = null;
+        },
+    });
+};
 </script>
 
 <template>
@@ -77,6 +105,58 @@ const user = page.props.auth.user;
                             placeholder="Email address"
                         />
                         <InputError class="mt-2" :message="errors.email" />
+                    </div>
+
+                    <!-- Profile Picture -->
+                    <div class="grid gap-2">
+                        <Label>Profile Picture</Label>
+                        <div class="flex items-center gap-4">
+                            <!-- Current Profile Picture -->
+                            <div class="relative">
+                                <img 
+                                    v-if="profilePicturePreview || user.profile_picture" 
+                                    :src="profilePicturePreview || `/storage/${user.profile_picture}`" 
+                                    alt="Profile" 
+                                    class="w-20 h-20 rounded-full object-cover border-2 border-[#CBD5E1]"
+                                />
+                                <div 
+                                    v-else 
+                                    class="w-20 h-20 rounded-full bg-[#5B21B6] flex items-center justify-center text-white text-2xl font-bold"
+                                >
+                                    {{ user.name.charAt(0).toUpperCase() }}
+                                </div>
+                            </div>
+                            
+                            <!-- Upload Buttons -->
+                            <div class="flex flex-col gap-2">
+                                <input 
+                                    ref="profilePictureInput"
+                                    type="file" 
+                                    name="profile_picture"
+                                    accept="image/*"
+                                    class="hidden"
+                                    @change="updateProfilePicturePreview"
+                                />
+                                <Button 
+                                    type="button"
+                                    variant="outline"
+                                    @click="selectNewProfilePicture"
+                                >
+                                    Select New Photo
+                                </Button>
+                                <Button 
+                                    v-if="user.profile_picture"
+                                    type="button"
+                                    variant="outline"
+                                    @click="removeProfilePicture"
+                                    class="text-[#EF4444] hover:text-[#DC2626]"
+                                >
+                                    Remove Photo
+                                </Button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-[#64748B]">JPG, PNG or GIF. Max size 2MB.</p>
+                        <InputError class="mt-2" :message="errors.profile_picture" />
                     </div>
 
                     <div v-if="mustVerifyEmail && !user.email_verified_at">

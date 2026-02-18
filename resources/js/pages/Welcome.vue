@@ -13,34 +13,49 @@ withDefaults(
 </script>
 
 <template>
-    <Head title="Welcome to TaskHive" />
+    <Head title="Welcome to TASKet" />
     
     <div class="min-h-screen bg-[#F9FAFB]">
         <!-- Header / Navbar -->
         <header class="bg-[#5B21B6] shadow-lg">
             <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-bold text-white">TaskHive</h1>
+                <div class="flex items-center gap-2">
+                    <!-- Basket with checkmark icon -->
+                    <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Basket body -->
+                        <path d="M5 9L4 19C4 19.5523 4.44772 20 5 20H19C19.5523 20 20 19.5523 20 19L19 9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- Left handle -->
+                        <path d="M7 9L9 4C9.26522 3.40973 9.85395 3 10.5 3H10.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- Right handle -->
+                        <path d="M17 9L15 4C14.7348 3.40973 14.1461 3 13.5 3H13.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- Handle bar -->
+                        <path d="M10.5 3H13.5" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Bottom line -->
+                        <path d="M5 9H19" stroke-width="2" stroke-linecap="round"/>
+                        <!-- Checkmark -->
+                        <path d="M9 13L11 15L15 11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h1 class="text-2xl font-bold text-white">TASKet</h1>
                 </div>
                 <div class="flex items-center gap-4">
                     <Link
                         v-if="$page.props.auth.user"
                         :href="dashboard()"
-                        class="px-6 py-2 bg-[#06B6D4] text-white rounded-lg font-medium hover:bg-[#0891B2] transition-colors"
+                        class="px-6 py-2 bg-white text-[#5B21B6] rounded-lg font-medium hover:bg-white/90 transition-colors"
                     >
                         Dashboard
                     </Link>
                     <template v-else>
                         <Link
                             :href="login()"
-                            class="px-6 py-2 text-white hover:text-[#06B6D4] transition-colors font-medium"
+                            class="px-6 py-2 text-white hover:text-white/80 transition-colors font-medium"
                         >
                             Login
                         </Link>
                         <Link
                             v-if="canRegister"
                             :href="register()"
-                            class="px-6 py-2 bg-[#06B6D4] text-white rounded-lg font-medium hover:bg-[#0891B2] transition-colors"
+                            class="px-6 py-2 text-white hover:text-white/80 transition-colors font-medium"
                         >
                             Sign Up
                         </Link>
@@ -55,23 +70,23 @@ withDefaults(
                 <!-- Left: Main Content -->
                 <div class="space-y-6">
                     <h2 class="text-5xl font-bold text-[#1E293B] leading-tight">
-                        Welcome to TaskHive
+                        Welcome to TASKet
                     </h2>
                     <p class="text-xl text-[#1E293B] leading-relaxed">
-                        Simplify task management for teachers and developers. Track tasks, assign automatically, and stay organized.
+                        Simplify task management for customers and developers. Track tasks, assign automatically, and stay organized.
                     </p>
                     <div class="flex gap-4">
                         <Link
                             v-if="!$page.props.auth.user"
                             :href="register()"
-                            class="px-8 py-4 bg-[#06B6D4] text-white rounded-lg font-semibold text-lg hover:bg-[#0891B2] transition-colors shadow-lg"
+                            class="px-8 py-4 bg-[#5B21B6] text-white rounded-lg font-semibold text-lg hover:bg-[#6D28D9] transition-colors shadow-lg"
                         >
                             Get Started
                         </Link>
                         <Link
                             v-else
                             :href="dashboard()"
-                            class="px-8 py-4 bg-[#06B6D4] text-white rounded-lg font-semibold text-lg hover:bg-[#0891B2] transition-colors shadow-lg"
+                            class="px-8 py-4 bg-[#5B21B6] text-white rounded-lg font-semibold text-lg hover:bg-[#6D28D9] transition-colors shadow-lg"
                         >
                             Go to Dashboard
                         </Link>
@@ -92,10 +107,10 @@ withDefaults(
                             <!-- Task Flow Illustration -->
                             <div class="flex items-center gap-4 p-4 bg-[#F9FAFB] rounded-lg border border-[#CBD5E1]">
                                 <div class="w-12 h-12 bg-[#5B21B6] rounded-full flex items-center justify-center text-white font-bold">
-                                    T
+                                    C
                                 </div>
                                 <div class="flex-1">
-                                    <p class="font-semibold text-[#1E293B]">Teacher creates task</p>
+                                    <p class="font-semibold text-[#1E293B]">Customer creates task</p>
                                     <p class="text-sm text-[#CBD5E1]">Define requirements & assign</p>
                                 </div>
                             </div>
@@ -143,7 +158,7 @@ withDefaults(
         <section class="bg-white py-20">
             <div class="container mx-auto px-6">
                 <h3 class="text-3xl font-bold text-center text-[#1E293B] mb-12">
-                    Why Choose TaskHive?
+                    Why Choose TASKet?
                 </h3>
                 <div class="grid md:grid-cols-3 gap-8">
                     <!-- Feature 1 -->
@@ -187,7 +202,7 @@ withDefaults(
             <div class="container mx-auto px-6">
                 <div class="grid md:grid-cols-3 gap-8">
                     <div>
-                        <h5 class="text-white text-xl font-bold mb-4">TaskHive</h5>
+                        <h5 class="text-white text-xl font-bold mb-4">TASKet</h5>
                         <p class="text-sm">Simplifying task management for modern teams.</p>
                     </div>
                     <div>
@@ -217,7 +232,7 @@ withDefaults(
                     </div>
                 </div>
                 <div class="border-t border-[#CBD5E1] mt-8 pt-8 text-center text-sm">
-                    <p>&copy; 2026 TaskHive. All rights reserved.</p>
+                    <p>&copy; 2026 TASKet. All rights reserved.</p>
                 </div>
             </div>
         </footer>

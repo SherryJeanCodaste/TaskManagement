@@ -17,13 +17,17 @@ const { getInitials } = useInitials();
 
 // Compute whether we should show the avatar image
 const showAvatar = computed(
-    () => props.user.avatar && props.user.avatar !== '',
+    () => props.user.profile_picture && props.user.profile_picture !== '',
+);
+
+const avatarSrc = computed(() => 
+    props.user.profile_picture ? `/storage/${props.user.profile_picture}` : ''
 );
 </script>
 
 <template>
     <Avatar class="h-8 w-8 overflow-hidden rounded-lg bg-[#5B21B6]">
-        <AvatarImage v-if="showAvatar" :src="user.avatar!" :alt="user.name" />
+        <AvatarImage v-if="showAvatar" :src="avatarSrc" :alt="user.name" />
         <AvatarFallback class="rounded-lg bg-[#5B21B6] text-white font-semibold">
             {{ getInitials(user.name) }}
         </AvatarFallback>

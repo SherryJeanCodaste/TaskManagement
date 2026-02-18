@@ -30,15 +30,47 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if exists
+            if ($user->profile_picture && \Storage::disk('public')->exists($user->profile_picture)) {
+                \Storage::disk('public')->delete($user->profile_picture);
+            }
+            
+            $file = $request->file('profile_picture');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('profile_pictures', $fileName, 'public');
+            $user->profile_picture = $filePath;
         }
 
-        $request->user()->save();
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
 
-        return to_route('profile.edit');
+        $user->save();
+
+        return to_route('profile.edit')->with('success', 'Profile updated successfully!');
+    }
+
+    /**
+     * Remove the user's profile picture.
+     */
+    public function removeProfilePicture(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        
+        if ($user->profile_picture && \Storage::disk('public')->exists($user->profile_picture)) {
+            \Storage::disk('public')->delete($user->profile_picture);
+        }
+        
+        $user->profile_picture = null;
+        $user->save();
+
+        return back()->with('success', 'Profile picture removed successfully!');
     }
 
     /**

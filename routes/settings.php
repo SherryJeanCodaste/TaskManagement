@@ -11,6 +11,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('settings/profile/picture', [ProfileController::class, 'removeProfilePicture'])->name('profile.picture.remove');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
