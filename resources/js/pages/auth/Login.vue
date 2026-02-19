@@ -51,7 +51,7 @@ defineProps<{
                         :tabindex="1"
                         autocomplete="email"
                         placeholder="email@example.com"
-                        class="border-[#CBD5E1] focus:border-[#06B6D4] focus:ring-[#06B6D4]"
+                        class="border-[#CBD5E1] focus:border-[#7C3AED] focus:ring-[#7C3AED]"
                     />
                     <InputError :message="errors.email" />
                 </div>
@@ -62,7 +62,7 @@ defineProps<{
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
-                            class="text-sm text-[#5B21B6] hover:text-[#06B6D4]"
+                            class="text-sm text-[#7C3AED] hover:text-[#6D28D9]"
                             :tabindex="5"
                         >
                             Forgot password?
@@ -76,7 +76,7 @@ defineProps<{
                         :tabindex="2"
                         autocomplete="current-password"
                         placeholder="Password"
-                        class="border-[#CBD5E1] focus:border-[#06B6D4] focus:ring-[#06B6D4]"
+                        class="border-[#CBD5E1] focus:border-[#7C3AED] focus:ring-[#7C3AED]"
                     />
                     <InputError :message="errors.password" />
                 </div>
@@ -90,7 +90,7 @@ defineProps<{
 
                 <Button
                     type="submit"
-                    class="mt-4 w-full bg-[#06B6D4] hover:bg-[#0891B2] text-white font-semibold py-6 rounded-lg"
+                    class="mt-4 w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold py-6 rounded-lg"
                     :tabindex="4"
                     :disabled="processing"
                     data-test="login-button"
@@ -105,7 +105,7 @@ defineProps<{
                 v-if="canRegister"
             >
                 Don't have an account?
-                <TextLink :href="register()" :tabindex="5" class="text-[#5B21B6] hover:text-[#06B6D4] font-semibold">Sign up</TextLink>
+                <TextLink :href="register()" :tabindex="5" class="text-[#7C3AED] hover:text-[#6D28D9] font-semibold">Sign up</TextLink>
             </div>
         </Form>
     </AuthBase>

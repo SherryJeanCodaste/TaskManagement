@@ -36,7 +36,7 @@ import { store } from '@/routes/register';
                         autocomplete="name"
                         name="name"
                         placeholder="Full name"
-                        class="border-[#CBD5E1] focus:border-[#06B6D4] focus:ring-[#06B6D4]"
+                        class="border-[#CBD5E1] focus:border-[#7C3AED] focus:ring-[#7C3AED]"
                     />
                     <InputError :message="errors.name" />
                 </div>
@@ -51,7 +51,7 @@ import { store } from '@/routes/register';
                         autocomplete="email"
                         name="email"
                         placeholder="email@example.com"
-                        class="border-[#CBD5E1] focus:border-[#06B6D4] focus:ring-[#06B6D4]"
+                        class="border-[#CBD5E1] focus:border-[#7C3AED] focus:ring-[#7C3AED]"
                     />
                     <InputError :message="errors.email" />
                 </div>
@@ -66,7 +66,7 @@ import { store } from '@/routes/register';
                         autocomplete="new-password"
                         name="password"
                         placeholder="Password"
-                        class="border-[#CBD5E1] focus:border-[#06B6D4] focus:ring-[#06B6D4]"
+                        class="border-[#CBD5E1] focus:border-[#7C3AED] focus:ring-[#7C3AED]"
                     />
                     <InputError :message="errors.password" />
                 </div>
@@ -81,14 +81,14 @@ import { store } from '@/routes/register';
                         autocomplete="new-password"
                         name="password_confirmation"
                         placeholder="Confirm password"
-                        class="border-[#CBD5E1] focus:border-[#06B6D4] focus:ring-[#06B6D4]"
+                        class="border-[#CBD5E1] focus:border-purple-500 focus:ring-purple-500"
                     />
                     <InputError :message="errors.password_confirmation" />
                 </div>
 
                 <Button
                     type="submit"
-                    class="mt-2 w-full bg-[#06B6D4] hover:bg-[#0891B2] text-white font-semibold py-6 rounded-lg"
+                    class="mt-2 w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-6 rounded-lg"
                     tabindex="5"
                     :disabled="processing"
                     data-test="register-user-button"
@@ -102,7 +102,7 @@ import { store } from '@/routes/register';
                 Already have an account?
                 <TextLink
                     :href="login()"
-                    class="text-[#5B21B6] hover:text-[#06B6D4] font-semibold underline underline-offset-4"
+                    class="text-purple-600 hover:text-purple-700 font-semibold underline underline-offset-4"
                     :tabindex="6"
                     >Log in</TextLink
                 >

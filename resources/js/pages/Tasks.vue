@@ -348,7 +348,7 @@ const clearFilters = () => {
                         Clear Filters
                     </button>
                     <a 
-                        v-else
+                        v-else-if="props.isCustomer"
                         :href="'/tasks/create'" 
                         class="inline-block px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#6D28D9] transition-colors font-semibold text-sm"
                     >
