@@ -190,6 +190,17 @@ const categoryColor = computed(() => {
         <div class="flex h-full flex-1 flex-col gap-4 p-4 bg-[#F9FAFB]">
             <!-- Compact Header -->
             <div class="bg-white rounded-xl border border-[#CBD5E1] shadow-sm p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <a :href="'/tasks'" class="flex items-center gap-2 text-[#64748B] hover:text-[#5B21B6] transition-colors font-medium text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Back to Tasks
+                    </a>
+                    <button v-if="isCustomer" @click="deleteTask" class="px-3 py-1.5 bg-[#EF4444] text-white rounded-lg hover:bg-[#DC2626] transition-colors font-medium text-sm">
+                        Delete Task
+                    </button>
+                </div>
                 <div class="flex items-start justify-between gap-4">
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-2">
@@ -480,15 +491,6 @@ const categoryColor = computed(() => {
                     </div>
                 </div>
 
-            <!-- Bottom Actions -->
-            <div class="flex gap-3 justify-between">
-                <a :href="'/tasks'" class="px-6 py-2 border border-[#CBD5E1] text-[#1E293B] rounded-lg hover:bg-[#F9FAFB] transition-colors font-medium text-sm">
-                    ← Back to Tasks
-                </a>
-                <button v-if="isCustomer" @click="deleteTask" class="px-6 py-2 bg-[#EF4444] text-white rounded-lg hover:bg-[#DC2626] transition-colors font-medium text-sm">
-                    Delete Task
-                </button>
-            </div>
         </div>
     </AppLayout>
 </template>
