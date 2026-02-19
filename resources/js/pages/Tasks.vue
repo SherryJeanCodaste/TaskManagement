@@ -72,6 +72,7 @@ const stats = computed(() => ({
     total: filteredTasks.value.length,
     pending: filteredTasks.value.filter(t => t.status === 'pending').length,
     inProgress: filteredTasks.value.filter(t => t.status === 'in_progress').length,
+    forReview: filteredTasks.value.filter(t => t.status === 'for_review').length,
     completed: filteredTasks.value.filter(t => t.status === 'completed').length,
 }));
 
@@ -115,7 +116,7 @@ const clearFilters = () => {
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
                     <div class="flex items-center justify-between">
                         <div>
@@ -151,6 +152,19 @@ const clearFilters = () => {
                         <div class="w-10 h-10 bg-[#F97316]/10 rounded-lg flex items-center justify-center">
                             <svg class="w-5 h-5 text-[#F97316]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-[#CBD5E1] shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xs text-[#1E293B] font-medium">For Review</p>
+                            <p class="text-2xl font-bold text-[#8B5CF6] mt-1">{{ stats.forReview }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-[#8B5CF6]/10 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#8B5CF6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                     </div>
@@ -295,6 +309,7 @@ const clearFilters = () => {
                                         @change="updateTaskStatus(task.id, ($event.target as HTMLSelectElement).value)"
                                         :class="{
                                             'bg-[#22C55E]/10 text-[#22C55E]': task.status === 'completed',
+                                            'bg-[#8B5CF6]/10 text-[#8B5CF6]': task.status === 'for_review',
                                             'bg-[#F97316]/10 text-[#F97316]': task.status === 'in_progress',
                                             'bg-[#EF4444]/10 text-[#EF4444]': task.status === 'pending'
                                         }"
@@ -302,6 +317,7 @@ const clearFilters = () => {
                                     >
                                         <option value="pending">Pending</option>
                                         <option value="in_progress">In Progress</option>
+                                        <option value="for_review">For Review</option>
                                         <option value="completed">Completed</option>
                                     </select>
                                     <!-- Customers only see status badge -->
@@ -309,12 +325,13 @@ const clearFilters = () => {
                                         v-else
                                         :class="{
                                             'bg-[#22C55E]/10 text-[#22C55E]': task.status === 'completed',
+                                            'bg-[#8B5CF6]/10 text-[#8B5CF6]': task.status === 'for_review',
                                             'bg-[#F97316]/10 text-[#F97316]': task.status === 'in_progress',
                                             'bg-[#EF4444]/10 text-[#EF4444]': task.status === 'pending'
                                         }"
                                         class="px-2 py-1 rounded-full text-xs font-semibold capitalize"
                                     >
-                                        {{ task.status.replace('_', ' ') }}
+                                        {{ task.status === 'for_review' ? 'For Review' : task.status.replace('_', ' ') }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-[#1E293B] text-xs">{{ new Date(task.created_at).toLocaleDateString() }}</td>
