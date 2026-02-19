@@ -390,8 +390,8 @@ const categoryColor = computed(() => {
                 </div>
             </div>
 
-                <!-- Upload Modal -->
-                <div v-if="showUploadModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="showUploadModal = false">
+            <!-- Upload Modal -->
+            <div v-if="showUploadModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click="showUploadModal = false">
                     <div @click.stop class="bg-white rounded-xl shadow-xl max-w-md w-full mx-4">
                         <div class="p-4 border-b border-[#E2E8F0]">
                             <div class="flex items-center justify-between">
@@ -479,7 +479,6 @@ const categoryColor = computed(() => {
                         </form>
                     </div>
                 </div>
-            </div>
 
             <!-- Bottom Actions -->
             <div class="flex gap-3 justify-between">
